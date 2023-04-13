@@ -9,21 +9,27 @@
 /* Begin PBXBuildFile section */
 		431564B429D33A3800A1DC3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431564B329D33A3800A1DC3A /* AppDelegate.swift */; };
 		431564B629D33A3800A1DC3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431564B529D33A3800A1DC3A /* SceneDelegate.swift */; };
-		431564B829D33A3800A1DC3A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431564B729D33A3800A1DC3A /* ViewController.swift */; };
-		431564BB29D33A3800A1DC3A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 431564B929D33A3800A1DC3A /* Main.storyboard */; };
+		431564B829D33A3800A1DC3A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431564B729D33A3800A1DC3A /* TabBarViewController.swift */; };
 		431564BD29D33A3900A1DC3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 431564BC29D33A3900A1DC3A /* Assets.xcassets */; };
 		431564C029D33A3900A1DC3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 431564BE29D33A3900A1DC3A /* LaunchScreen.storyboard */; };
+		4326C16529E7E49B00A78303 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4326C16429E7E49B00A78303 /* StatisticsViewController.swift */; };
+		4326C16729E7E50B00A78303 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4326C16629E7E50B00A78303 /* TrackersViewController.swift */; };
+		4326C16B29E8354800A78303 /* CardTrackerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4326C16A29E8354800A78303 /* CardTrackerCell.swift */; };
+		4326C16E29E83B7600A78303 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4326C16D29E83B7600A78303 /* Tracker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		431564B029D33A3800A1DC3A /* TrackMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		431564B329D33A3800A1DC3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		431564B529D33A3800A1DC3A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		431564B729D33A3800A1DC3A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		431564BA29D33A3800A1DC3A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		431564B729D33A3800A1DC3A /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		431564BC29D33A3900A1DC3A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		431564BF29D33A3900A1DC3A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		431564C129D33A3900A1DC3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4326C16429E7E49B00A78303 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
+		4326C16629E7E50B00A78303 /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
+		4326C16A29E8354800A78303 /* CardTrackerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTrackerCell.swift; sourceTree = "<group>"; };
+		4326C16D29E83B7600A78303 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +62,58 @@
 		431564B229D33A3800A1DC3A /* TrackMe */ = {
 			isa = PBXGroup;
 			children = (
-				431564B329D33A3800A1DC3A /* AppDelegate.swift */,
-				431564B529D33A3800A1DC3A /* SceneDelegate.swift */,
-				431564B729D33A3800A1DC3A /* ViewController.swift */,
-				431564B929D33A3800A1DC3A /* Main.storyboard */,
-				431564BC29D33A3900A1DC3A /* Assets.xcassets */,
-				431564BE29D33A3900A1DC3A /* LaunchScreen.storyboard */,
-				431564C129D33A3900A1DC3A /* Info.plist */,
+				4326C16C29E83B3800A78303 /* Models */,
+				4326C16029E7E38E00A78303 /* ViewControllers */,
+				4326C16329E7E3EC00A78303 /* Resources */,
+				4326C16229E7E3D100A78303 /* Storyboard */,
+				4326C16129E7E3B600A78303 /* App */,
 			);
 			path = TrackMe;
+			sourceTree = "<group>";
+		};
+		4326C16029E7E38E00A78303 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				431564B729D33A3800A1DC3A /* TabBarViewController.swift */,
+				4326C16429E7E49B00A78303 /* StatisticsViewController.swift */,
+				4326C16629E7E50B00A78303 /* TrackersViewController.swift */,
+				4326C16A29E8354800A78303 /* CardTrackerCell.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		4326C16129E7E3B600A78303 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				431564C129D33A3900A1DC3A /* Info.plist */,
+				431564B329D33A3800A1DC3A /* AppDelegate.swift */,
+				431564B529D33A3800A1DC3A /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		4326C16229E7E3D100A78303 /* Storyboard */ = {
+			isa = PBXGroup;
+			children = (
+				431564BE29D33A3900A1DC3A /* LaunchScreen.storyboard */,
+			);
+			path = Storyboard;
+			sourceTree = "<group>";
+		};
+		4326C16329E7E3EC00A78303 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				431564BC29D33A3900A1DC3A /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4326C16C29E83B3800A78303 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4326C16D29E83B7600A78303 /* Tracker.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +176,6 @@
 			files = (
 				431564C029D33A3900A1DC3A /* LaunchScreen.storyboard in Resources */,
 				431564BD29D33A3900A1DC3A /* Assets.xcassets in Resources */,
-				431564BB29D33A3800A1DC3A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +186,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				431564B829D33A3800A1DC3A /* ViewController.swift in Sources */,
+				431564B829D33A3800A1DC3A /* TabBarViewController.swift in Sources */,
 				431564B429D33A3800A1DC3A /* AppDelegate.swift in Sources */,
+				4326C16729E7E50B00A78303 /* TrackersViewController.swift in Sources */,
 				431564B629D33A3800A1DC3A /* SceneDelegate.swift in Sources */,
+				4326C16B29E8354800A78303 /* CardTrackerCell.swift in Sources */,
+				4326C16529E7E49B00A78303 /* StatisticsViewController.swift in Sources */,
+				4326C16E29E83B7600A78303 /* Tracker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		431564B929D33A3800A1DC3A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				431564BA29D33A3800A1DC3A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		431564BE29D33A3900A1DC3A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -289,10 +333,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5VBQ98K5MQ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TrackMe/Info.plist;
+				INFOPLIST_FILE = TrackMe/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
@@ -321,10 +364,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5VBQ98K5MQ;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TrackMe/Info.plist;
+				INFOPLIST_FILE = TrackMe/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
