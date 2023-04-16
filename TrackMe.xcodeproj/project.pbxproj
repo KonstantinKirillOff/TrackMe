@@ -12,6 +12,7 @@
 		431564B829D33A3800A1DC3A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431564B729D33A3800A1DC3A /* TabBarViewController.swift */; };
 		431564BD29D33A3900A1DC3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 431564BC29D33A3900A1DC3A /* Assets.xcassets */; };
 		431564C029D33A3900A1DC3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 431564BE29D33A3900A1DC3A /* LaunchScreen.storyboard */; };
+		432447F429EC20FD00649596 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432447F329EC20FD00649596 /* HeaderView.swift */; };
 		4326C16529E7E49B00A78303 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4326C16429E7E49B00A78303 /* StatisticsViewController.swift */; };
 		4326C16729E7E50B00A78303 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4326C16629E7E50B00A78303 /* TrackersViewController.swift */; };
 		4326C16B29E8354800A78303 /* CardTrackerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4326C16A29E8354800A78303 /* CardTrackerCell.swift */; };
@@ -26,6 +27,7 @@
 		431564BC29D33A3900A1DC3A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		431564BF29D33A3900A1DC3A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		431564C129D33A3900A1DC3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		432447F329EC20FD00649596 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		4326C16429E7E49B00A78303 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		4326C16629E7E50B00A78303 /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		4326C16A29E8354800A78303 /* CardTrackerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTrackerCell.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				4326C16429E7E49B00A78303 /* StatisticsViewController.swift */,
 				4326C16629E7E50B00A78303 /* TrackersViewController.swift */,
 				4326C16A29E8354800A78303 /* CardTrackerCell.swift */,
+				432447F329EC20FD00649596 /* HeaderView.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				4326C16B29E8354800A78303 /* CardTrackerCell.swift in Sources */,
 				4326C16529E7E49B00A78303 /* StatisticsViewController.swift in Sources */,
 				4326C16E29E83B7600A78303 /* Tracker.swift in Sources */,
+				432447F429EC20FD00649596 /* HeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
