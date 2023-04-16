@@ -13,10 +13,16 @@ final class TrackersViewController: UIViewController {
 		Tracker(name: "Пить воду", color: UIColor(named: "Color3")!, emoji: "🤖", schedule: [1, 3]),
 		Tracker(name: "Tracker 2 Разработка на IOS 2 часа в день", color: UIColor(named: "Color6")!, emoji: "😍", schedule: [1, 2, 3, 4, 5])]),
 							  TrackerCategory(name: "Домашний уют", trackers: [
-		Tracker(name: "Tracker 3 Дыхательные практики", color: UIColor(named: "Color2")!, emoji: "😤", schedule: [1, 2])])
+		Tracker(name: "Tracker 3 Дыхательные практики", color: UIColor(named: "Color2")!, emoji: "😤", schedule: [3, 4]),
+		Tracker(name: "Tracker 3 Дыхательные практики", color: UIColor(named: "Color1")!, emoji: "😤", schedule: [4, 5]),
+		Tracker(name: "Tracker 3 Дыхательные практики", color: UIColor(named: "Color4")!, emoji: "😤", schedule: [5, 6]),
+		Tracker(name: "Tracker 3 Дыхательные практики", color: UIColor(named: "Color5")!, emoji: "😤", schedule: [6, 7]),
+		Tracker(name: "Tracker 3 Дыхательные практики", color: UIColor(named: "Color3")!, emoji: "😤", schedule: [1, 2])
+							  ])
 	]
 	private var visibleCategories = [TrackerCategory]()
-	private var completedTrackers = [TrackerRecord]()
+	private var completedTrackers: Set<TrackerRecord> = []
+	private var currentDate = Date()
 	
 	private var searchBarIsEmpty: Bool {
 		guard let text = searchController.searchBar.text else { return false }
@@ -35,21 +41,21 @@ final class TrackersViewController: UIViewController {
 		return datePicker
 	}()
 	
-	private let collectionView: UICollectionView = {
+	private lazy var collectionView: UICollectionView = {
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
 		collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HeaderView.identifier)
 		collectionView.register(CardTrackerCell.self, forCellWithReuseIdentifier: CardTrackerCell.identifier)
 		return collectionView
 	}()
 	
-	private let searchController: UISearchController = {
+	private lazy var searchController: UISearchController = {
 		let searchController = UISearchController(searchResultsController: nil)
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.searchBar.placeholder = "Поиск"
 		return searchController
 	}()
 	
-	private let emptyStub: UIStackView = {
+	private lazy var emptyStub: UIStackView = {
 		let image = UIImageView(image: UIImage(named: "EmptyTrackers")!)
 		let titleLabel = UILabel()
 		titleLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
@@ -73,6 +79,7 @@ final class TrackersViewController: UIViewController {
 		setupNavigationBar()
 		setupStubEmpty()
 		checkEmptyTrackers()
+		filterTrackersByDay()
 	}
 	
 	private func setupView() {
@@ -127,23 +134,37 @@ final class TrackersViewController: UIViewController {
 		emptyStub.isHidden = (cardCount > 0)
 	}
 	
+	private func filterTrackersByDay() {
+		let weekDay = Calendar.current.dateComponents([.weekday], from: currentDate).weekday!
+
+		let suitCategory = categories.filter({ $0.trackers.filter({ $0.schedule.contains(weekDay) }).count > 0 })
+		visibleCategories = suitCategory.map({ category in
+			TrackerCategory(name: category.name, trackers: category.trackers.filter({ $0.schedule.contains(weekDay) }))
+		})
+		collectionView.reloadData()
+		checkEmptyTrackers()
+	}
+	
 	@objc private func openAddNewTrackerVC() {
 		print("addTrackerVC")
 	}
 	
 	@objc private func showTrackersOnDate() {
-		let newDate = datePicker.date
-		print("\(newDate)")
+		currentDate = datePicker.date
+		filterTrackersByDay()
+		collectionView.reloadData()
 	}
 }
 
 extension TrackersViewController: UICollectionViewDataSource {
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		isFiltered ? visibleCategories.count : categories.count
+		//isFiltered ? visibleCategories.count : categories.count
+		visibleCategories.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		let trackersCategoriesArray = isFiltered ? visibleCategories : categories
+		//let trackersCategoriesArray = isFiltered ? visibleCategories : categories
+		let trackersCategoriesArray = visibleCategories
 		let category = trackersCategoriesArray[section]
 		return category.trackers.count
 	}
@@ -163,9 +184,34 @@ extension TrackersViewController: UICollectionViewDataSource {
 		
 		let trackersCategoriesArray = isFiltered ? visibleCategories : categories
 		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
-		cell.configCell(for: tracker)
+		cell.delegate = self
+		cell.configCell(for: tracker, record: completedTrackers.filter({ $0.id == tracker.id }).count, tracked: trackerTrackedToday(id: tracker.id))
 		return cell
 	}
+}
+
+extension TrackersViewController: ICardTrackCellDelegate {
+	func quantityButtonPressed(_ cell: CardTrackerCell) {
+		guard let indexPath = collectionView.indexPath(for: cell) else { return }
+		guard currentDate <= Date() else { return }
+		
+		let trackersCategoriesArray = isFiltered ? visibleCategories : categories
+		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
+		
+		if !trackerTrackedToday(id: tracker.id) {
+			completedTrackers.insert(TrackerRecord(id: tracker.id, date: currentDate))
+			collectionView.reloadItems(at: [indexPath])
+		} else {
+			completedTrackers.remove(TrackerRecord(id: tracker.id, date: currentDate))
+			collectionView.reloadItems(at: [indexPath])
+		}
+	}
+	
+	private func trackerTrackedToday(id: UUID) -> Bool {
+		let mockTracker = TrackerRecord(id: id, date: currentDate)
+		return completedTrackers.contains(mockTracker)
+	}
+	
 }
 
 extension TrackersViewController: UISearchResultsUpdating {

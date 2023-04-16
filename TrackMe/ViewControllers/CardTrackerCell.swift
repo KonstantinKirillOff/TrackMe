@@ -6,9 +6,13 @@
 //
 
 import UIKit
+protocol ICardTrackCellDelegate: AnyObject {
+	func quantityButtonPressed(_ cell: CardTrackerCell)
+}
 
 final class CardTrackerCell: UICollectionViewCell {
 	static let identifier = "trackerCell"
+	weak var delegate: ICardTrackCellDelegate?
 	
 	private lazy var emojiView: UIView = {
 		let emojiView = UIView()
@@ -71,6 +75,8 @@ final class CardTrackerCell: UICollectionViewCell {
 		return stackView
 	}()
 	
+	var addRecord: (() -> Void)?
+	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setupCardView()
@@ -124,6 +130,7 @@ final class CardTrackerCell: UICollectionViewCell {
 	}
 	
 	private func setupQuantityButton() {
+		addQuantityButton.addTarget(self, action: #selector(quantityButtonPressed), for: .touchUpInside)
 		addQuantityButton.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
 			addQuantityButton.heightAnchor.constraint(equalToConstant: 34),
@@ -143,7 +150,7 @@ final class CardTrackerCell: UICollectionViewCell {
 		])
 	}
 	
-	func configCell(for tracker: Tracker) {
+	func configCell(for tracker: Tracker, record: Int, tracked: Bool) {
 		emojiLabel.text = tracker.emoji
 		titleLabel.text = tracker.name
 		
@@ -152,12 +159,20 @@ final class CardTrackerCell: UICollectionViewCell {
 		cardView.layer.borderColor = tracker.color.withAlphaComponent(0.3).cgColor
 	
 		addQuantityButton.backgroundColor = tracker.color
-		addQuantityButton.setImage(UIImage(systemName: "plus"), for: .normal)
+		if !tracked {
+			addQuantityButton.setImage(UIImage(systemName: "plus"), for: .normal)
+		} else {
+			addQuantityButton.setImage(UIImage(systemName: "minus"), for: .normal)
+		}
 		
-		quantityLabel.text = "5 дней"
+		quantityLabel.text = "\(record) дней"
 	}
 	
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+	
+	@objc func quantityButtonPressed(_ sender: UIButton) {
+		delegate?.quantityButtonPressed(self)
 	}
 }
