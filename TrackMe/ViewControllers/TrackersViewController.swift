@@ -14,14 +14,15 @@ final class TrackersViewController: UIViewController {
 		Tracker(name: "Tracker 2 Разработка на IOS 2 часа в день", color: UIColor(named: "Color6")!, emoji: "😍", schedule: [1, 2, 3, 4, 5])]),
 							  TrackerCategory(name: "Домашний уют", trackers: [
 		Tracker(name: "Tracker 4 Дыхательные практики", color: UIColor(named: "Color2")!, emoji: "😤", schedule: [3, 4]),
-		Tracker(name: "Tracker 5 Дыхательные практики", color: UIColor(named: "Color1")!, emoji: "😤", schedule: [4, 5]),
+		Tracker(name: "Tracker 5 Дыхательные практики", color: UIColor(named: "Color1")!, emoji: "😤", schedule: [2, 5]),
 		Tracker(name: "Tracker 6 Дыхательные практики", color: UIColor(named: "Color4")!, emoji: "😤", schedule: [5, 6]),
 		Tracker(name: "Tracker 7 Дыхательные практики", color: UIColor(named: "Color5")!, emoji: "😤", schedule: [6, 7]),
 		Tracker(name: "Tracker 8 Дыхательные практики", color: UIColor(named: "Color3")!, emoji: "😤", schedule: [1, 2])
 							  ])
 	]
 	private var visibleForDay = [TrackerCategory]()
-	private var visibleCategories = [TrackerCategory]()
+	private var visibleCategoriesAfterFilter = [TrackerCategory]()
+	
 	private var completedTrackers: Set<TrackerRecord> = []
 	private var currentDate: Date?
 	
@@ -134,7 +135,7 @@ final class TrackersViewController: UIViewController {
 	}
 	
 	private func checkEmptyTrackers() {
-		let cardCount = isFiltered ? visibleCategories.count : visibleForDay.count
+		let cardCount = isFiltered ? visibleCategoriesAfterFilter.count : visibleForDay.count
 		emptyStub.isHidden = (cardCount > 0)
 	}
 	
@@ -162,11 +163,11 @@ final class TrackersViewController: UIViewController {
 
 extension TrackersViewController: UICollectionViewDataSource {
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		isFiltered ? visibleCategories.count : visibleForDay.count
+		isFiltered ? visibleCategoriesAfterFilter.count : visibleForDay.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		let trackersCategoriesArray = isFiltered ? visibleCategories : visibleForDay
+		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
 		let category = trackersCategoriesArray[section]
 		return category.trackers.count
 	}
@@ -175,7 +176,7 @@ extension TrackersViewController: UICollectionViewDataSource {
 		guard kind == UICollectionView.elementKindSectionHeader else { return UICollectionReusableView() }
 		
 		let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.identifier, for: indexPath) as! HeaderView
-		let trackersCategoriesArray = isFiltered ? visibleCategories : visibleForDay
+		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
 		let category = trackersCategoriesArray[indexPath.section]
 		headerView.headerTittle.text = category.name
 		return headerView
@@ -184,7 +185,7 @@ extension TrackersViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CardTrackerCell.identifier, for: indexPath) as! CardTrackerCell
 		
-		let trackersCategoriesArray = isFiltered ? visibleCategories : visibleForDay
+		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
 		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
 		cell.delegate = self
 		cell.configCell(for: tracker, record: completedTrackers.filter({ $0.id == tracker.id }).count, tracked: trackerTrackedToday(id: tracker.id))
@@ -197,7 +198,7 @@ extension TrackersViewController: ICardTrackCellDelegate {
 		guard let indexPath = collectionView.indexPath(for: cell) else { return }
 		guard currentDate! <= Date() else { return }
 		
-		let trackersCategoriesArray = isFiltered ? visibleCategories : visibleForDay
+		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
 		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
 		
 		if !trackerTrackedToday(id: tracker.id) {
@@ -220,7 +221,7 @@ extension TrackersViewController: UISearchResultsUpdating {
 	func updateSearchResults(for searchController: UISearchController) {
 		let searchingString = searchController.searchBar.text!.lowercased()
 		let suitCategory = visibleForDay.filter({ $0.trackers.filter({ $0.name.lowercased().contains(searchingString) }).count > 0 })
-		visibleCategories = suitCategory.map({ category in
+		visibleCategoriesAfterFilter = suitCategory.map({ category in
 			TrackerCategory(name: category.name, trackers: category.trackers.filter({ $0.name.lowercased().contains(searchingString) }))
 		})
 		collectionView.reloadData()
