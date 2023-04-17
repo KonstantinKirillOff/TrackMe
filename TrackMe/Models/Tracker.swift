@@ -12,7 +12,7 @@ struct Tracker {
 	let name: String
 	let color: UIColor
 	let emoji: String
-	let schedule: [Int]
+	let schedule: Set<Int>
 }
 
 struct TrackerCategory {
