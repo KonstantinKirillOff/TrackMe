@@ -39,7 +39,7 @@ final class TrackersViewController: UIViewController {
 		let datePicker = UIDatePicker()
 		datePicker.preferredDatePickerStyle = .compact
 		datePicker.datePickerMode = .date
-		datePicker.addTarget(self, action: #selector(showTrackersOnDate), for: .editingDidEnd)
+		datePicker.addTarget(self, action: #selector(showTrackersOnDate), for: .valueChanged)
 		return datePicker
 	}()
 	
@@ -150,8 +150,14 @@ final class TrackersViewController: UIViewController {
 		return visibleCategoriesForDay
 	}
 	
+	private func getDayWithoutTime(date: Date) -> Date {
+		let dateWithoutTime = Calendar.current.dateComponents([.year, .month, .day], from: date)
+		return Calendar.current.date(from: dateWithoutTime)!
+	}
+	
 	@objc private func openAddNewTrackerVC() {
-		print("addTrackerVC")
+		let chooseVC = ChooseTrackerViewController()
+		present(chooseVC, animated: true)
 	}
 	
 	@objc private func showTrackersOnDate() {
@@ -202,16 +208,16 @@ extension TrackersViewController: ICardTrackCellDelegate {
 		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
 		
 		if !trackerTrackedToday(id: tracker.id) {
-			completedTrackers.insert(TrackerRecord(id: tracker.id, date: currentDate!))
+			completedTrackers.insert(TrackerRecord(id: tracker.id, date: getDayWithoutTime(date: currentDate!)))
 			collectionView.reloadItems(at: [indexPath])
 		} else {
-			completedTrackers.remove(TrackerRecord(id: tracker.id, date: currentDate!))
+			completedTrackers.remove(TrackerRecord(id: tracker.id, date: getDayWithoutTime(date: currentDate!)))
 			collectionView.reloadItems(at: [indexPath])
 		}
 	}
 	
 	private func trackerTrackedToday(id: UUID) -> Bool {
-		let mockTracker = TrackerRecord(id: id, date: currentDate!)
+		let mockTracker = TrackerRecord(id: id, date: getDayWithoutTime(date: currentDate!))
 		return completedTrackers.contains(mockTracker)
 	}
 	

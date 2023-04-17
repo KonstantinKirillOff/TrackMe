@@ -158,11 +158,12 @@ final class CardTrackerCell: UICollectionViewCell {
 		cardView.layer.borderWidth = 1
 		cardView.layer.borderColor = tracker.color.withAlphaComponent(0.3).cgColor
 	
-		addQuantityButton.backgroundColor = tracker.color
 		if !tracked {
 			addQuantityButton.setImage(UIImage(systemName: "plus"), for: .normal)
+			addQuantityButton.backgroundColor = tracker.color
 		} else {
-			addQuantityButton.setImage(UIImage(systemName: "minus"), for: .normal)
+			addQuantityButton.setImage(UIImage(named: "Done"), for: .normal)
+			addQuantityButton.backgroundColor = tracker.color.withAlphaComponent(0.4)
 		}
 		
 		quantityLabel.text = "\(record) дней"
