@@ -7,7 +7,12 @@
 
 import UIKit
 
+protocol IChooseTrackerViewControllerDelegate: AnyObject {
+	func newTrackerDidAdd(tracker: Tracker, categoryName: String, vc: ChooseTrackerViewController)
+}
+
 final class ChooseTrackerViewController: UIViewController {
+	weak var delegate: IChooseTrackerViewControllerDelegate?
 	
 	private lazy var headerLabel: UILabel = {
 		let label = UILabel()
@@ -35,6 +40,7 @@ final class ChooseTrackerViewController: UIViewController {
 		button.tintColor = UIColor(named: "YPWhite")
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
+		button.addTarget(self, action: #selector(unregularActivityButtonPressed), for: .touchUpInside)
 		return button
 	}()
 	
@@ -83,7 +89,22 @@ final class ChooseTrackerViewController: UIViewController {
 	
 	@objc private func habitButtonPressed(_ sender: UIButton) {
 		let newTrackerVC = NewTrackerViewController()
-		newTrackerVC.configViewController(header: "Новая привычка", trackerTypes: ["Категория", "Расписание"])
+		newTrackerVC.configViewController(header: "Новая привычка", trackerTypes: ["Категория", "Расписание"], delegate: self)
 		present(newTrackerVC, animated: true)
+	}
+	
+	@objc private func unregularActivityButtonPressed(_ sender: UIButton) {
+		let newTrackerVC = NewTrackerViewController()
+		newTrackerVC.configViewController(header: "Новое нерегулярное событие", trackerTypes: ["Категория"], delegate: self)
+		present(newTrackerVC, animated: true)
+	}
+}
+
+extension ChooseTrackerViewController: INewTrackerViewControllerDelegate {
+	func newTrackerDidAdd(tracker: Tracker, categoryName: String, vc: NewTrackerViewController) {
+		vc.dismiss(animated: true) { [weak self] in
+			guard let self = self else { return }
+			self.delegate?.newTrackerDidAdd(tracker: tracker, categoryName: categoryName , vc: self)
+		}
 	}
 }

@@ -7,11 +7,18 @@
 
 import UIKit
 
+protocol INewTrackerViewControllerDelegate: AnyObject {
+	func newTrackerDidAdd(tracker: Tracker, categoryName: String, vc: NewTrackerViewController)
+}
+
 final class NewTrackerViewController: UIViewController {
 	private var trackerTypes = [String]()
 	private var headerForView = ""
-	private var chosenCategory = TrackerCategory(name: "Интересное", trackers: [Tracker]())
-	private var weekSchedule = [Int]()
+	
+	private var weekSchedule: [Int : WeekDay] = [:]
+	private var categoryName = "Домашний уют"
+	
+	weak var delegate: INewTrackerViewControllerDelegate?
 	
 	private lazy var headerLabel: UILabel = {
 		let label = UILabel()
@@ -31,8 +38,11 @@ final class NewTrackerViewController: UIViewController {
 	
 	private lazy var tableView: UITableView = {
 		let tableView = UITableView()
-		tableView.layer.cornerRadius = 16
 		tableView.rowHeight = 75
+		tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+		tableView.layer.masksToBounds = true
+		tableView.layer.cornerRadius = 16
+		tableView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMaxYCorner]
 		return tableView
 	}()
 	
@@ -43,8 +53,9 @@ final class NewTrackerViewController: UIViewController {
 		button.layer.borderWidth = 1
 		button.layer.borderColor = UIColor(named: "YPRed")?.cgColor
 		button.backgroundColor = UIColor(named: "YPWhite")
-		button.tintColor = UIColor(named: "YPRed")
+		button.setTitleColor(UIColor(named: "YPRed"), for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+		button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
 		return button
 	}()
 	
@@ -52,9 +63,10 @@ final class NewTrackerViewController: UIViewController {
 		let button = UIButton()
 		button.setTitle("Создать", for: .normal)
 		button.backgroundColor = UIColor(named: "YPBlack")
-		button.tintColor = UIColor(named: "YPWhite")
+		button.setTitleColor(UIColor(named: "YPWhite"), for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
+		button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
 		return button
 	}()
 	
@@ -78,7 +90,6 @@ final class NewTrackerViewController: UIViewController {
 	}
 	
 	private func setupTableView() {
-		
 		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "tableViewCell")
 		tableView.delegate = self
 		tableView.dataSource = self
@@ -90,7 +101,7 @@ final class NewTrackerViewController: UIViewController {
 			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 			tableView.topAnchor.constraint(equalTo: nameTrackerTextField.bottomAnchor, constant: 24),
-			tableView.heightAnchor.constraint(equalToConstant: 150)
+			tableView.heightAnchor.constraint(equalToConstant: CGFloat(trackerTypes.count * 75))
 		])
 	}
 	
@@ -127,9 +138,54 @@ final class NewTrackerViewController: UIViewController {
 		])
 	}
 	
-	func configViewController(header: String, trackerTypes: [String]) {
+	private func getScheduleInString() -> String {
+		return weekSchedule.sorted(by: { $0.key < $1.key }).map({ $0.value.rawValue }).joined(separator: ", ")
+	}
+
+	private func getNumberDay(for weekDay: WeekDay) -> Int {
+		switch weekDay {
+		case .Понедельник:
+			return 2
+		case .Вторник:
+			return 3
+		case .Среда:
+			return 4
+		case .Четверг:
+			return 5
+		case .Пятница:
+			return 6
+		case .Суббота:
+			return 7
+		case .Воскресенье:
+			return 1
+		}
+	}
+	
+	@objc private func cancelButtonTapped() {
+		dismiss(animated: true)
+	}
+	
+	@objc private func addButtonTapped() {
+		var trackName = "No name tracker"
+		if let text = nameTrackerTextField.text, !text.isEmpty {
+			trackName = text
+		}
+		
+		let currentDayWeek = Calendar.current.component(.weekday, from: Date())
+		let setWithWeekDays = weekSchedule.isEmpty ? Set([currentDayWeek]) : Set(weekSchedule.map({$0.key}))
+		let newTracker = Tracker(name: trackName,
+								 color: UIColor(named: "Color\(Int.random(in: 1...6))") ?? .darkGray,
+								 emoji: "🤖",
+								 schedule: setWithWeekDays)
+	
+		delegate?.newTrackerDidAdd(tracker: newTracker, categoryName: categoryName, vc: self)
+		dismiss(animated: true)
+	}
+	
+	func configViewController(header: String, trackerTypes: [String], delegate: INewTrackerViewControllerDelegate) {
 		self.trackerTypes = trackerTypes
 		self.headerForView = header
+		self.delegate = delegate
 	}
 }
 
@@ -139,9 +195,22 @@ extension NewTrackerViewController: UITableViewDataSource {
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
-		
+		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: ScheduleCell.identifier)
+
 		cell.textLabel?.text = trackerTypes[indexPath.row]
+		
+		cell.detailTextLabel?.textColor = UIColor(named: "YPGray")
+		cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17)
+		
+		//category
+		if indexPath.row == 0 {
+			cell.detailTextLabel?.text = categoryName
+		} else { //weekSchedule
+			let weekSchedule = getScheduleInString()
+			cell.detailTextLabel?.text = weekSchedule
+		}
+		
+		cell.selectionStyle = .none
 		cell.accessoryType = .disclosureIndicator
 		cell.backgroundColor = UIColor(named: "YPBackground")
 		return cell
@@ -150,7 +219,17 @@ extension NewTrackerViewController: UITableViewDataSource {
 
 extension NewTrackerViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let scheduleVC = ScheduleViewController()
-		present(scheduleVC, animated: true)
+		if indexPath.row == 1 {
+			let scheduleVC = ScheduleViewController()
+			scheduleVC.delegate = self
+			present(scheduleVC, animated: true)
+		}
+	}
+}
+
+extension NewTrackerViewController: IScheduleControllerDelegate {
+	func getScheduleForTracker(weekDays: Set<WeekDay>) {
+		weekDays.forEach { weekSchedule[getNumberDay(for: $0)] = $0 }
+		tableView.reloadData()
 	}
 }

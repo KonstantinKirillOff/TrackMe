@@ -9,17 +9,12 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
 	
-	private var categories = [TrackerCategory(name: "Радостные мелочи", trackers: [
-		Tracker(name: "Пить воду 1", color: UIColor(named: "Color3")!, emoji: "🤖", schedule: [1, 3]),
-		Tracker(name: "Tracker 2 Разработка на IOS 2 часа в день", color: UIColor(named: "Color6")!, emoji: "😍", schedule: [1, 2, 3, 4, 5])]),
-							  TrackerCategory(name: "Домашний уют", trackers: [
-		Tracker(name: "Tracker 4 Дыхательные практики", color: UIColor(named: "Color2")!, emoji: "😤", schedule: [3, 4]),
-		Tracker(name: "Tracker 5 Дыхательные практики", color: UIColor(named: "Color1")!, emoji: "😤", schedule: [2, 5]),
-		Tracker(name: "Tracker 6 Дыхательные практики", color: UIColor(named: "Color4")!, emoji: "😤", schedule: [5, 6]),
-		Tracker(name: "Tracker 7 Дыхательные практики", color: UIColor(named: "Color5")!, emoji: "😤", schedule: [6, 7]),
-		Tracker(name: "Tracker 8 Дыхательные практики", color: UIColor(named: "Color3")!, emoji: "😤", schedule: [1, 2])
-							  ])
-	]
+	private var categories = [TrackerCategory(name: "Категория которая была", trackers: [
+		Tracker(name: "Кодить",
+				color: UIColor(named: "Color\(Int.random(in: 1...6))") ?? .darkGray,
+				emoji: "😇",
+				schedule: [1, 2, 3, 4, 5])
+	])]
 	private var visibleForDay = [TrackerCategory]()
 	private var visibleCategoriesAfterFilter = [TrackerCategory]()
 	
@@ -58,7 +53,7 @@ final class TrackersViewController: UIViewController {
 	}()
 	
 	private lazy var emptyStub: UIStackView = {
-		let image = UIImageView(image: UIImage(named: "EmptyTrackers")!)
+		let image = UIImageView(image: UIImage(named: "EmptyTrackers") ?? UIImage())
 		let titleLabel = UILabel()
 		titleLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
 		titleLabel.text = "Что будем отслеживать?"
@@ -157,6 +152,7 @@ final class TrackersViewController: UIViewController {
 	
 	@objc private func openAddNewTrackerVC() {
 		let chooseVC = ChooseTrackerViewController()
+		chooseVC.delegate = self
 		present(chooseVC, animated: true)
 	}
 	
@@ -164,6 +160,7 @@ final class TrackersViewController: UIViewController {
 		currentDate = datePicker.date
 		visibleForDay = filterTrackersByDay()
 		collectionView.reloadData()
+		checkEmptyTrackers()
 	}
 }
 
@@ -235,10 +232,6 @@ extension TrackersViewController: UISearchResultsUpdating {
 	}
 }
 
-extension TrackersViewController: UICollectionViewDelegate {
-	
-}
-
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		CGSize(width: (collectionView.bounds.width - 41)/2, height: 148)
@@ -264,5 +257,26 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 														 height: UIView.layoutFittingExpandedSize.height),
 														 withHorizontalFittingPriority: .required,
 														 verticalFittingPriority: .fittingSizeLevel)
+	}
+}
+
+extension TrackersViewController: IChooseTrackerViewControllerDelegate {
+	func newTrackerDidAdd(tracker: Tracker, categoryName: String, vc: ChooseTrackerViewController) {
+		vc.dismiss(animated: true) { [weak self] in
+			guard let self = self else { return }
+			
+			if let index = self.categories.firstIndex(where: {$0.name == categoryName}) {
+				let oldCategory = self.categories.remove(at: index)
+				let updatedCategory = TrackerCategory(name: categoryName, trackers: oldCategory.trackers + [tracker])
+				self.categories.insert(updatedCategory, at: index)
+			} else {
+				let newCategory = TrackerCategory(name: categoryName, trackers: [tracker])
+				self.categories.append(newCategory)
+			}
+			
+			self.visibleForDay = filterTrackersByDay()
+			self.collectionView.reloadData()
+			self.checkEmptyTrackers()
+		}
 	}
 }

@@ -75,8 +75,6 @@ final class CardTrackerCell: UICollectionViewCell {
 		return stackView
 	}()
 	
-	var addRecord: (() -> Void)?
-	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setupCardView()
