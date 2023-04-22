@@ -21,6 +21,7 @@
 		4329314229ED8F6B00D4DB60 /* NewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4329314129ED8F6B00D4DB60 /* NewTrackerViewController.swift */; };
 		433E3C3F29EDAB1000067202 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E3C3E29EDAB1000067202 /* ScheduleViewController.swift */; };
 		433E3C4129EDABEF00067202 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E3C4029EDABEF00067202 /* ScheduleCell.swift */; };
+		433E3C4429F4158100067202 /* WeekDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E3C4329F4158100067202 /* WeekDays.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		4329314129ED8F6B00D4DB60 /* NewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerViewController.swift; sourceTree = "<group>"; };
 		433E3C3E29EDAB1000067202 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		433E3C4029EDABEF00067202 /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
+		433E3C4329F4158100067202 /* WeekDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 				4326C16C29E83B3800A78303 /* Models */,
 				4326C16029E7E38E00A78303 /* ViewControllers */,
 				4326C16329E7E3EC00A78303 /* Resources */,
+				433E3C4229F4155900067202 /* Helpers */,
 				4326C16229E7E3D100A78303 /* Storyboard */,
 				4326C16129E7E3B600A78303 /* App */,
 			);
@@ -130,6 +133,14 @@
 				4326C16D29E83B7600A78303 /* Tracker.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		433E3C4229F4155900067202 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				433E3C4329F4158100067202 /* WeekDays.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -203,6 +214,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				433E3C4429F4158100067202 /* WeekDays.swift in Sources */,
 				4329314029ED801900D4DB60 /* ChooseTrackerViewController.swift in Sources */,
 				431564B829D33A3800A1DC3A /* TabBarViewController.swift in Sources */,
 				431564B429D33A3800A1DC3A /* AppDelegate.swift in Sources */,

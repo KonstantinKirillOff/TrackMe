@@ -141,25 +141,6 @@ final class NewTrackerViewController: UIViewController {
 	private func getScheduleInString() -> String {
 		return weekSchedule.sorted(by: { $0.key < $1.key }).map({ $0.value.rawValue }).joined(separator: ", ")
 	}
-
-	private func getNumberDay(for weekDay: WeekDay) -> Int {
-		switch weekDay {
-		case .Понедельник:
-			return 2
-		case .Вторник:
-			return 3
-		case .Среда:
-			return 4
-		case .Четверг:
-			return 5
-		case .Пятница:
-			return 6
-		case .Суббота:
-			return 7
-		case .Воскресенье:
-			return 1
-		}
-	}
 	
 	@objc private func cancelButtonTapped() {
 		dismiss(animated: true)
@@ -229,7 +210,7 @@ extension NewTrackerViewController: UITableViewDelegate {
 
 extension NewTrackerViewController: IScheduleControllerDelegate {
 	func getScheduleForTracker(weekDays: Set<WeekDay>) {
-		weekDays.forEach { weekSchedule[getNumberDay(for: $0)] = $0 }
+		weekDays.forEach { weekSchedule[$0.getNumberDay()] = $0 }
 		tableView.reloadData()
 	}
 }
