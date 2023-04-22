@@ -7,16 +7,6 @@
 
 import UIKit
 
-enum WeekDay: String, CaseIterable {
-	case Понедельник = "Пн"
-	case Вторник = "Вт"
-	case Среда = "Ср"
-	case Четверг = "Чт"
-	case Пятница = "Пт"
-	case Суббота = "Сб"
-	case Воскресенье = "Вс"
-}
-
 protocol IScheduleControllerDelegate: AnyObject {
 	func getScheduleForTracker(weekDays: Set<WeekDay>)
 }
@@ -114,7 +104,7 @@ extension ScheduleViewController: UITableViewDataSource {
 		
 		let day = WeekDay.allCases[indexPath.row]
 		cell.backgroundColor = UIColor(named: "YPBackground")
-		cell.configCell(name: "\(day)", delegate: self, switchedOn: daysForSchedule.contains(day))
+		cell.configCell(name: day.getDayOnRussian(), delegate: self, switchedOn: daysForSchedule.contains(day))
 		return cell
 	}
 }

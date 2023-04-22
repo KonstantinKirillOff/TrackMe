@@ -13,7 +13,7 @@ final class TrackersViewController: UIViewController {
 		Tracker(name: "Кодить",
 				color: UIColor(named: "Color\(Int.random(in: 1...6))") ?? .darkGray,
 				emoji: "😇",
-				schedule: [1, 2, 3, 4, 5])
+				schedule: [1, 2, 3, 4, 5, 6, 7])
 	])]
 	private var visibleForDay = [TrackerCategory]()
 	private var visibleCategoriesAfterFilter = [TrackerCategory]()
