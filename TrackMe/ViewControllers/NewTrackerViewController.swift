@@ -29,10 +29,11 @@ final class NewTrackerViewController: UIViewController {
 	
 	private lazy var nameTrackerTextField: UITextField = {
 		let textField = UITextField()
-		textField.placeholder  = "    Введите название трэкера"
 		textField.font = UIFont.systemFont(ofSize: 17)
 		textField.backgroundColor = UIColor(named: "YPBackground")
 		textField.layer.cornerRadius = 16
+		textField.placeholderRect(forBounds: CGRect(x: 16, y: 27, width: 286, height: 22))
+		textField.placeholder  = "Введите название трэкера"
 		return textField
 	}()
 	

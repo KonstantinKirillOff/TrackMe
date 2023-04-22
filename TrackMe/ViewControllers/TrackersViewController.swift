@@ -274,7 +274,7 @@ extension TrackersViewController: IChooseTrackerViewControllerDelegate {
 				self.categories.append(newCategory)
 			}
 			
-			self.visibleForDay = filterTrackersByDay()
+			self.visibleForDay = self.filterTrackersByDay()
 			self.collectionView.reloadData()
 			self.checkEmptyTrackers()
 		}
