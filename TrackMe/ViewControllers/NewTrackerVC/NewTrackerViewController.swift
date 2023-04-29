@@ -28,12 +28,7 @@ final class NewTrackerViewController: UIViewController {
 	}()
 	
 	private lazy var nameTrackerTextField: UITextField = {
-		let textField = UITextField()
-		textField.font = UIFont.systemFont(ofSize: 17)
-		textField.backgroundColor = UIColor(named: "YPBackground")
-		textField.layer.cornerRadius = 16
-		textField.placeholderRect(forBounds: CGRect(x: 16, y: 27, width: 286, height: 22))
-		textField.placeholder  = "Введите название трэкера"
+		let textField = BaseTextField()
 		return textField
 	}()
 	
@@ -52,9 +47,9 @@ final class NewTrackerViewController: UIViewController {
 		button.setTitle("Отменить", for: .normal)
 		button.layer.cornerRadius = 16
 		button.layer.borderWidth = 1
-		button.layer.borderColor = UIColor(named: "YPRed")?.cgColor
-		button.backgroundColor = UIColor(named: "YPWhite")
-		button.setTitleColor(UIColor(named: "YPRed"), for: .normal)
+		button.layer.borderColor = UIColor.ypRed?.cgColor
+		button.backgroundColor = UIColor.ypWhite
+		button.setTitleColor(UIColor.ypRed, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
 		return button
@@ -63,8 +58,8 @@ final class NewTrackerViewController: UIViewController {
 	private lazy var addButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Создать", for: .normal)
-		button.backgroundColor = UIColor(named: "YPBlack")
-		button.setTitleColor(UIColor(named: "YPWhite"), for: .normal)
+		button.backgroundColor = UIColor.ypBlack
+		button.setTitleColor(UIColor.ypWhite, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
@@ -84,7 +79,7 @@ final class NewTrackerViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = UIColor.ypWhite
 		
 		setupUIElements()
 		setupTableView()
@@ -181,7 +176,7 @@ extension NewTrackerViewController: UITableViewDataSource {
 
 		cell.textLabel?.text = trackerTypes[indexPath.row]
 		
-		cell.detailTextLabel?.textColor = UIColor(named: "YPGray")
+		cell.detailTextLabel?.textColor = UIColor.ypGray
 		cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17)
 		
 		//category
@@ -194,7 +189,7 @@ extension NewTrackerViewController: UITableViewDataSource {
 		
 		cell.selectionStyle = .none
 		cell.accessoryType = .disclosureIndicator
-		cell.backgroundColor = UIColor(named: "YPBackground")
+		cell.backgroundColor = UIColor.ypBackground
 		return cell
 	}
 }

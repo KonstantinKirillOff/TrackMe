@@ -83,7 +83,7 @@ final class TrackersViewController: UIViewController {
 	}
 	
 	private func setupView() {
-		view.backgroundColor = .white
+		view.backgroundColor = UIColor.ypWhite
 		
 		if let navBar = navigationController?.navigationBar {
 			title = "Трэкеры"
@@ -178,7 +178,9 @@ extension TrackersViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 		guard kind == UICollectionView.elementKindSectionHeader else { return UICollectionReusableView() }
 		
-		let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderView.identifier, for: indexPath) as! HeaderView
+		let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+																		 withReuseIdentifier: HeaderView.identifier,
+																		 for: indexPath) as! HeaderView
 		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
 		let category = trackersCategoriesArray[indexPath.section]
 		headerView.headerTittle.text = category.name
@@ -217,7 +219,6 @@ extension TrackersViewController: ICardTrackCellDelegate {
 		let mockTracker = TrackerRecord(id: id, date: getDayWithoutTime(date: currentDate!))
 		return completedTrackers.contains(mockTracker)
 	}
-	
 }
 
 extension TrackersViewController: UISearchResultsUpdating {
