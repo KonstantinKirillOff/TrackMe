@@ -114,11 +114,24 @@ final class NewTrackerViewController: UIViewController {
 		return stackView
 	}()
 	
+	private lazy var scrollView: UIScrollView = {
+		let scrollView = UIScrollView()
+		scrollView.alwaysBounceVertical = true
+		return scrollView
+	}()
+	
+	private lazy var contentView: UIView = {
+		let contentView = UIView()
+		return contentView
+	}()
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = UIColor.ypWhite
 		
 		setupUIElements()
+		setUpScrollView()
+		setupTextField()
 		setupTableView()
 		setupEmojiCollectionView()
 		setupColorCollectionView()
@@ -135,16 +148,6 @@ final class NewTrackerViewController: UIViewController {
 			headerLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 27)
 		])
 		
-		view.addSubview(nameTrackerTextField)
-		nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
-
-		NSLayoutConstraint.activate([
-			nameTrackerTextField.heightAnchor.constraint(equalToConstant: 75),
-			nameTrackerTextField.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
-			nameTrackerTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-			nameTrackerTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-		])
-		
 		view.addSubview(buttonsHorizontalStackView)
 		buttonsHorizontalStackView.translatesAutoresizingMaskIntoConstraints = false
 		
@@ -156,26 +159,76 @@ final class NewTrackerViewController: UIViewController {
 		])
 	}
 	
+	private func setUpScrollView() {
+		view.addSubview(scrollView)
+		scrollView.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+			scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			scrollView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 14),
+			scrollView.bottomAnchor.constraint(equalTo: buttonsHorizontalStackView.topAnchor)
+		])
+		
+		scrollView.addSubview(contentView)
+		contentView.translatesAutoresizingMaskIntoConstraints = false
+
+		NSLayoutConstraint.activate([
+			contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+			contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+			contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+			contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+			contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+			contentView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height - 100)
+		])
+	}
+	
+	private func setupTextField() {
+		contentView.addSubview(nameTrackerTextField)
+		nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
+
+		NSLayoutConstraint.activate([
+			nameTrackerTextField.heightAnchor.constraint(equalToConstant: 75),
+			nameTrackerTextField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+			nameTrackerTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+			nameTrackerTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+		])
+	}
+	
+	private func setupTableView() {
+		tableView.delegate = self
+		tableView.dataSource = self
+		
+		contentView.addSubview(tableView)
+		tableView.translatesAutoresizingMaskIntoConstraints = false
+		
+		NSLayoutConstraint.activate([
+			tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+			tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+			tableView.topAnchor.constraint(equalTo: nameTrackerTextField.bottomAnchor, constant: 24),
+			tableView.heightAnchor.constraint(equalToConstant: CGFloat(trackerTypes.count * 75))
+		])
+	}
+	
 	private func setupEmojiCollectionView() {
 		emojiCollectionView.delegate = self
 		emojiCollectionView.dataSource = self
 		emojiCollectionView.allowsMultipleSelection = false
 		
-		view.addSubview(emojiLabel)
+		contentView.addSubview(emojiLabel)
 		emojiLabel.translatesAutoresizingMaskIntoConstraints = false
 		
 		NSLayoutConstraint.activate([
 			emojiLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 32),
-			emojiLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
-			emojiLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 28)
+			emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
+			emojiLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 28)
 		])
 		
-		view.addSubview(emojiCollectionView)
+		contentView.addSubview(emojiCollectionView)
 		emojiCollectionView.translatesAutoresizingMaskIntoConstraints = false
 		
 		NSLayoutConstraint.activate([
-			emojiCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			emojiCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+			emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 			emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor),
 			emojiCollectionView.heightAnchor.constraint(equalToConstant: 204),
 		])
@@ -186,38 +239,23 @@ final class NewTrackerViewController: UIViewController {
 		colorCollectionView.dataSource = self
 		colorCollectionView.allowsMultipleSelection = false
 		
-		view.addSubview(colorLabel)
+		contentView.addSubview(colorLabel)
 		colorLabel.translatesAutoresizingMaskIntoConstraints = false
 		
 		NSLayoutConstraint.activate([
 			colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor),
-			colorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
-			colorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 28)
+			colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
+			colorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 28)
 		])
 		
-		view.addSubview(colorCollectionView)
+		contentView.addSubview(colorCollectionView)
 		colorCollectionView.translatesAutoresizingMaskIntoConstraints = false
 		
 		NSLayoutConstraint.activate([
-			colorCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			colorCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+			colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 			colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor),
 			colorCollectionView.heightAnchor.constraint(equalToConstant: 204),
-		])
-	}
-	
-	private func setupTableView() {
-		tableView.delegate = self
-		tableView.dataSource = self
-		
-		view.addSubview(tableView)
-		tableView.translatesAutoresizingMaskIntoConstraints = false
-		
-		NSLayoutConstraint.activate([
-			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-			tableView.topAnchor.constraint(equalTo: nameTrackerTextField.bottomAnchor, constant: 24),
-			tableView.heightAnchor.constraint(equalToConstant: CGFloat(trackerTypes.count * 75))
 		])
 	}
 	

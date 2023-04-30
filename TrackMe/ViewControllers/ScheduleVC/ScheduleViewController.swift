@@ -106,6 +106,7 @@ extension ScheduleViewController: UITableViewDataSource {
 		
 		let day = WeekDay.allCases[indexPath.row]
 		cell.backgroundColor = UIColor.ypBackground
+		cell.selectionStyle = .none
 		cell.configCell(name: day.getDayOnRussian(), delegate: self, switchedOn: daysForSchedule.contains(day))
 		return cell
 	}
