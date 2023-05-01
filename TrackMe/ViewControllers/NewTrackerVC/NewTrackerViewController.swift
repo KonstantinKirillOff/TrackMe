@@ -23,8 +23,8 @@ final class NewTrackerViewController: UIViewController {
 	private var trackerTypes = [String]()
 	private var headerForView = ""
 	
-	private var weekSchedule: [Int : WeekDay] = [:]
-	private var categoryName = "Домашний уют"
+	private var weekSchedule: [String : WeekDay] = [:]
+	private var categoryName = "Категория по умолчанию2"
 	
 	weak var delegate: INewTrackerViewControllerDelegate?
 	
@@ -273,11 +273,12 @@ final class NewTrackerViewController: UIViewController {
 			trackName = text
 		}
 		
-		let currentDayWeek = Calendar.current.component(.weekday, from: Date())
+		let currentDayWeek = String(Calendar.current.component(.weekday, from: Date()))
 		let setWithWeekDays = weekSchedule.isEmpty ? Set([currentDayWeek]) : Set(weekSchedule.map({$0.key}))
-		let newTracker = Tracker(name: trackName,
-								 color: currentColor ?? .darkGray,
-								 emoji: currentEmoji ?? "🤖",
+		let newTracker = Tracker(id: UUID(),
+								 name: trackName,
+								 color: currentColor ?? .green,
+								 emoji: currentEmoji ?? "💩",
 								 schedule: setWithWeekDays)
 	
 		delegate?.newTrackerDidAdd(tracker: newTracker, categoryName: categoryName, vc: self)
