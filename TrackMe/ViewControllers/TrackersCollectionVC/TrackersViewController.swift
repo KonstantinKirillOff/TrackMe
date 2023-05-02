@@ -253,14 +253,14 @@ extension TrackersViewController: IChooseTrackerViewControllerDelegate {
 				category = existingCategory
 			} else {
 				do {
-					let newCategory = try dataProvider.addCategory(TrackerCategory(name: categoryName, trackers: []))
+					let newCategory = try self.dataProvider.addCategory(TrackerCategory(name: categoryName, trackers: []))
 					category = newCategory
 				} catch {
 					print(StoreErrors.addElementToDBError(error))
 				}
 			}
 			try? self.dataProvider.addTracker(tracker, category: category!)
-			try? self.dataProvider.addFiltersForFetchResultController(searchControllerText: isFiltered ? self.searchController.searchBar.text! : "", 													  currentDay: getDayWithoutTime(date: self.currentDate!)
+			try? self.dataProvider.addFiltersForFetchResultController(searchControllerText: self.isFiltered ? self.searchController.searchBar.text! : "", 													  currentDay: self.getDayWithoutTime(date: self.currentDate!)
 			)
 			self.checkEmptyTrackers()
 		}
