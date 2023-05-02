@@ -24,7 +24,7 @@ final class NewTrackerViewController: UIViewController {
 	private var headerForView = ""
 	
 	private var weekSchedule: [String : WeekDay] = [:]
-	private var categoryName = "Категория по умолчанию2"
+	private var categoryName = "Категория по умолчанию"
 	
 	weak var delegate: INewTrackerViewControllerDelegate?
 	

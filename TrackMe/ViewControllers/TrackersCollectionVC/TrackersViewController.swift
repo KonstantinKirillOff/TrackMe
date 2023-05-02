@@ -10,17 +10,6 @@ import UIKit
 final class TrackersViewController: UIViewController {
 	
 	private var dataProvider: IDataProviderProtocol!
-	
-//	private var categories = [TrackerCategory(name: "Категория которая была", trackers: [
-//		Tracker(name: "Кодить",
-//				color: UIColor(named: "Color\(Int.random(in: 1...6))") ?? .darkGray,
-//				emoji: "😇",
-//				schedule: ["1", "2", "3", "4", "5", "6", "7"])
-//	])]
-//	private var visibleForDay = [TrackerCategory]()
-//	private var visibleCategoriesAfterFilter = [TrackerCategory]()
-	
-	//private var completedTrackers: Set<TrackerRecord> = []
 	private var currentDate: Date?
 	
 	private var searchBarIsEmpty: Bool {
@@ -84,7 +73,6 @@ final class TrackersViewController: UIViewController {
 		setupNavigationBar()
 		setupStubEmpty()
 		
-		//visibleForDay = filterTrackersByDay()
 		try? dataProvider.addFiltersForFetchResultController(searchControllerText: "", currentDay: getDayWithoutTime(date: currentDate!))
 		checkEmptyTrackers()
 	}
@@ -137,21 +125,9 @@ final class TrackersViewController: UIViewController {
 	}
 	
 	private func checkEmptyTrackers() {
-		//let cardCount = isFiltered ? visibleCategoriesAfterFilter.count : visibleForDay.count
 		let fetchControllerIsEmpty = dataProvider.fetchResultControllerIsEmpty()
 		emptyStub.isHidden = !fetchControllerIsEmpty
 	}
-	
-//	private func filterTrackersByDay() -> [TrackerCategory] {
-//		let weekDay = String(Calendar.current.component(.weekday, from: currentDate!))
-//		let suitableCategory = categories.filter({ $0.trackers.filter({ $0.schedule.contains(weekDay) }).count > 0 })
-//		let visibleCategoriesForDay = suitableCategory.map({ category in
-//			let filteredTrackers = category.trackers.filter({ $0.schedule.contains(weekDay) })
-//			return TrackerCategory(name: category.name, trackers: filteredTrackers)
-//		})
-//
-//		return visibleCategoriesForDay
-//	}
 	
 	private func getDayWithoutTime(date: Date) -> Date {
 		let dateWithoutTime = Calendar.current.dateComponents([.year, .month, .day], from: date)
@@ -166,7 +142,6 @@ final class TrackersViewController: UIViewController {
 	
 	@objc private func showTrackersOnDate() {
 		currentDate = datePicker.date
-		//visibleForDay = filterTrackersByDay()
 		try? dataProvider.addFiltersForFetchResultController(searchControllerText: isFiltered ? searchController.searchBar.text! : "", currentDay: getDayWithoutTime(date: currentDate!))
 		collectionView.reloadData()
 		checkEmptyTrackers()
@@ -175,14 +150,10 @@ final class TrackersViewController: UIViewController {
 
 extension TrackersViewController: UICollectionViewDataSource {
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		//isFiltered ? visibleCategoriesAfterFilter.count : visibleForDay.count
 		dataProvider.numberOfSections
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
-//		let category = trackersCategoriesArray[section]
-//		return category.trackers.count
 		dataProvider.numberOfRowsInSection(section)
 	}
 	
@@ -192,22 +163,21 @@ extension TrackersViewController: UICollectionViewDataSource {
 		let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
 																		 withReuseIdentifier: HeaderView.identifier,
 																		 for: indexPath) as! HeaderView
-		//let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
-		//let category = trackersCategoriesArray[indexPath.section]
+		
 		let sectionName = dataProvider.nameOfSection(indexPath.section)
-		headerView.headerTittle.text = sectionName //category.name
+		headerView.headerTittle.text = sectionName
 		return headerView
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CardTrackerCell.identifier, for: indexPath) as! CardTrackerCell
-		
-//		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
-//		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CardTrackerCell.identifier, for: indexPath) as? CardTrackerCell else { return UICollectionViewCell()
+		}
 		guard let tracker = dataProvider.getTrackerObject(at: indexPath) else { return UICollectionViewCell() }
+		
 		let uuidString = tracker.id.uuidString
 		let recordCountForTracker = dataProvider.countRecordForTracker(trackerID: uuidString)
 		let trackerTrackedToday = dataProvider.trackerTrackedToday(date: getDayWithoutTime(date: currentDate!), trackerID: uuidString)
+		
 		cell.delegate = self
 		cell.configCell(for: tracker, record: recordCountForTracker, tracked: trackerTrackedToday)
 		return cell
@@ -218,40 +188,27 @@ extension TrackersViewController: ICardTrackCellDelegate {
 	func quantityButtonPressed(_ cell: CardTrackerCell) {
 		guard let indexPath = collectionView.indexPath(for: cell) else { return }
 		guard currentDate! <= Date() else { return }
-		
-//		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
-//		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
-		
 		guard let tracker = dataProvider.getTrackerObject(at: indexPath) else { return }
+		
 		let dateWithoutTime = getDayWithoutTime(date: currentDate!)
 		let trackerCoreData = dataProvider.getTrackerCoreData(at: indexPath)
 		let uuidString = tracker.id.uuidString
 		let trackerTrackedToday = dataProvider.trackerTrackedToday(date: dateWithoutTime, trackerID: uuidString)
 		
 		if !trackerTrackedToday {
-			//completedTrackers.insert(TrackerRecord(id: tracker.id, date: getDayWithoutTime(date: currentDate!)))
 			try? dataProvider.addTrackerRecord(TrackerRecord(id: tracker.id, date: dateWithoutTime), for: trackerCoreData)
 			collectionView.reloadItems(at: [indexPath])
 		} else {
-			//completedTrackers.remove(TrackerRecord(id: tracker.id, date: getDayWithoutTime(date: currentDate!)))
 			dataProvider.deleteRecord(date: dateWithoutTime, trackerID: uuidString)
 			collectionView.reloadItems(at: [indexPath])
 		}
 	}
-	
-//	private func trackerTrackedToday(id: UUID) -> Bool {
-//		let mockTracker = TrackerRecord(id: id, date: getDayWithoutTime(date: currentDate!))
-//		return completedTrackers.contains(mockTracker)
-//	}
 }
 
 extension TrackersViewController: UISearchResultsUpdating {
 	func updateSearchResults(for searchController: UISearchController) {
 		let searchingString = searchController.searchBar.text!.lowercased()
-//		let suitCategory = visibleForDay.filter({ $0.trackers.filter({ $0.name.lowercased().contains(searchingString) }).count > 0 })
-//		visibleCategoriesAfterFilter = suitCategory.map({ category in
-//			TrackerCategory(name: category.name, trackers: category.trackers.filter({ $0.name.lowercased().contains(searchingString) }))
-//		})
+		
 		try? dataProvider.addFiltersForFetchResultController(searchControllerText: searchingString, currentDay: getDayWithoutTime(date: currentDate!))
 		collectionView.reloadData()
 		checkEmptyTrackers()

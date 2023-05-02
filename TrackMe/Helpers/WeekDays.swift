@@ -16,6 +16,10 @@ enum WeekDay: String, CaseIterable {
 	case saturday = "Сб"
 	case sunday = "Вс"
 	
+	static func getWeekDayInNumber(for date: Date) -> String {
+		String(Calendar.current.component(.weekday, from: date))
+	}
+	
 	func getNumberDay() -> String {
 		switch self {
 		case .monday:
@@ -52,9 +56,5 @@ enum WeekDay: String, CaseIterable {
 		case .sunday:
 			return "Воскресенье"
 		}
-	}
-	
-	static func getWeekDayInNumber(for date: Date) -> String {
-		String(Calendar.current.component(.weekday, from: date))
 	}
 }

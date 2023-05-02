@@ -21,7 +21,7 @@ struct TrackerStoreUpdate {
 }
 
 protocol IDataProviderDelegate: AnyObject {
-	//func trackersStoreDidUpdate(_ update: TrackerStoreUpdate)
+	//func trackersStoreDidUpdate(_ update: TrackerStoreUpdate) - в следующем спринте буду разбираться с обновлением по индексу
 	func trackersStoreDidUpdate()
 }
 
@@ -30,22 +30,21 @@ protocol IDataProviderProtocol {
 	func numberOfRowsInSection(_ section: Int) -> Int
 	func nameOfSection(_ section: Int) -> String
 	
-	func getTrackerObject(at: IndexPath) -> Tracker?
-	
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws
 	func addCategory(_ category: TrackerCategory) throws -> TrackerCategoryCoreData
 	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
 	func deleteRecord(date: Date, trackerID: String)
 	
 	func getTrackerCoreData(at indexPath: IndexPath) -> TrackerCoreData
+	func getTrackerObject(at: IndexPath) -> Tracker?
 	
 	func fetchCategory(by name: String) -> TrackerCategoryCoreData?
 	func fetchResultControllerIsEmpty() -> Bool
-	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date) throws
 	
 	func countRecordForTracker(trackerID: String) -> Int
 	func trackerTrackedToday(date: Date, trackerID: String) -> Bool
 	
+	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date) throws
 }
 
 // MARK: - DataProvider
@@ -169,7 +168,7 @@ extension DataProvider: NSFetchedResultsControllerDelegate {
 	//	} - буду дальше разбираться в следующем спринте
 
 	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//		delegate?.trackersStoreDidUpdate(insertedIndexes!)
+//		delegate?.trackersStoreDidUpdate(insertedIndexes!) - буду дальше разбираться в следующем спринте
 //		insertedIndexes = nil
 		delegate?.trackersStoreDidUpdate()
 	}
@@ -183,6 +182,6 @@ extension DataProvider: NSFetchedResultsControllerDelegate {
 //			}
 //		default:
 //			break
-//		}
+//		} - буду дальше разбираться в следующем спринте
 	}
 }
