@@ -20,7 +20,7 @@ final class TrackersViewController: UIViewController {
 //	private var visibleForDay = [TrackerCategory]()
 //	private var visibleCategoriesAfterFilter = [TrackerCategory]()
 	
-	private var completedTrackers: Set<TrackerRecord> = []
+	//private var completedTrackers: Set<TrackerRecord> = []
 	private var currentDate: Date?
 	
 	private var searchBarIsEmpty: Bool {
@@ -204,9 +204,12 @@ extension TrackersViewController: UICollectionViewDataSource {
 		
 //		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
 //		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
-		let tracker = dataProvider.getTrackerObject(at: indexPath)
+		guard let tracker = dataProvider.getTrackerObject(at: indexPath) else { return UICollectionViewCell() }
+		let uuidString = tracker.id.uuidString
+		let recordCountForTracker = dataProvider.countRecordForTracker(trackerID: uuidString)
+		let trackerTrackedToday = dataProvider.trackerTrackedToday(date: getDayWithoutTime(date: currentDate!), trackerID: uuidString)
 		cell.delegate = self
-		cell.configCell(for: tracker, record: completedTrackers.filter({ $0.id == tracker.id }).count, tracked: trackerTrackedToday(id: tracker.id))
+		cell.configCell(for: tracker, record: recordCountForTracker, tracked: trackerTrackedToday)
 		return cell
 	}
 }
@@ -219,21 +222,27 @@ extension TrackersViewController: ICardTrackCellDelegate {
 //		let trackersCategoriesArray = isFiltered ? visibleCategoriesAfterFilter : visibleForDay
 //		let tracker = trackersCategoriesArray[indexPath.section].trackers[indexPath.row]
 		
-		let tracker = dataProvider.getTrackerObject(at: indexPath)
+		guard let tracker = dataProvider.getTrackerObject(at: indexPath) else { return }
+		let dateWithoutTime = getDayWithoutTime(date: currentDate!)
+		let trackerCoreData = dataProvider.getTrackerCoreData(at: indexPath)
+		let uuidString = tracker.id.uuidString
+		let trackerTrackedToday = dataProvider.trackerTrackedToday(date: dateWithoutTime, trackerID: uuidString)
 		
-		if !trackerTrackedToday(id: tracker.id) {
-			completedTrackers.insert(TrackerRecord(id: tracker.id, date: getDayWithoutTime(date: currentDate!)))
+		if !trackerTrackedToday {
+			//completedTrackers.insert(TrackerRecord(id: tracker.id, date: getDayWithoutTime(date: currentDate!)))
+			try? dataProvider.addTrackerRecord(TrackerRecord(id: tracker.id, date: dateWithoutTime), for: trackerCoreData)
 			collectionView.reloadItems(at: [indexPath])
 		} else {
-			completedTrackers.remove(TrackerRecord(id: tracker.id, date: getDayWithoutTime(date: currentDate!)))
+			//completedTrackers.remove(TrackerRecord(id: tracker.id, date: getDayWithoutTime(date: currentDate!)))
+			dataProvider.deleteRecord(date: dateWithoutTime, trackerID: uuidString)
 			collectionView.reloadItems(at: [indexPath])
 		}
 	}
 	
-	private func trackerTrackedToday(id: UUID) -> Bool {
-		let mockTracker = TrackerRecord(id: id, date: getDayWithoutTime(date: currentDate!))
-		return completedTrackers.contains(mockTracker)
-	}
+//	private func trackerTrackedToday(id: UUID) -> Bool {
+//		let mockTracker = TrackerRecord(id: id, date: getDayWithoutTime(date: currentDate!))
+//		return completedTrackers.contains(mockTracker)
+//	}
 }
 
 extension TrackersViewController: UISearchResultsUpdating {
@@ -294,18 +303,19 @@ extension TrackersViewController: IChooseTrackerViewControllerDelegate {
 				}
 			}
 			try? self.dataProvider.addTracker(tracker, category: category!)
-			try? self.dataProvider.addFiltersForFetchResultController(searchControllerText: isFiltered ? self.searchController.searchBar.text! : "", currentDay: getDayWithoutTime(date: self.currentDate!))
+			try? self.dataProvider.addFiltersForFetchResultController(searchControllerText: isFiltered ? self.searchController.searchBar.text! : "", 													  currentDay: getDayWithoutTime(date: self.currentDate!)
+			)
 			self.checkEmptyTrackers()
 		}
 	}
 }
 
 extension TrackersViewController: IDataProviderDelegate {
-	func trackersStoreDidUpdate(_ update: TrackerStoreUpdate) {
-//		collectionView.performBatchUpdates {
-//			let insertedIndexPaths = update.insertedIndexes
-//			collectionView.insertItems(at: insertedIndexPaths)
-//		}
+	func trackersStoreDidUpdate() {
+		//				collectionView.performBatchUpdates {
+		//					collectionView.insertItems(at: [IndexPath(row: update.insertedRow, section: update.insertedSection)])
+		//				}
+		//- тут не получилось с обновлением по индексу, не смог победить, нужно больше времени на разборы.
 		collectionView.reloadData()
 	}
 }

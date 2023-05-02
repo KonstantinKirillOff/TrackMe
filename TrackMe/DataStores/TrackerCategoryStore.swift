@@ -18,13 +18,8 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 	func add(_ trackerCategory: TrackerCategory) throws -> TrackerCategoryCoreData {
 		let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
 		trackerCategoryCoreData.name = trackerCategory.name
-		
-		do {
-			try context.save()
-			return trackerCategoryCoreData
-		} catch {
-			throw StoreErrors.addElementToDBError(error)
-		}
+		try context.save()
+		return trackerCategoryCoreData
 	}
 	
 	func fetchCategory(by name: String) -> TrackerCategoryCoreData? {

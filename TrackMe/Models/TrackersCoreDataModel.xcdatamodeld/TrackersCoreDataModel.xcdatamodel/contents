@@ -7,9 +7,9 @@
     <entity name="TrackerCoreData" representedClassName="TrackerCoreData" syncable="YES" codeGenerationType="class">
         <attribute name="emoji" attributeType="String"/>
         <attribute name="hexColor" attributeType="String"/>
-        <attribute name="id" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="schedule" attributeType="String"/>
+        <attribute name="trackerID" attributeType="String"/>
         <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerCategoryCoreData" inverseName="trackers" inverseEntity="TrackerCategoryCoreData"/>
         <relationship name="records" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackerRecordCoreData" inverseName="tracker" inverseEntity="TrackerRecordCoreData"/>
     </entity>
