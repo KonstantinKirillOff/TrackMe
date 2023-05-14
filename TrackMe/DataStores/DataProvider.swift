@@ -13,6 +13,7 @@ enum StoreErrors: Error {
 	case failedToInitializeContext
 	case addElementToDBError(Error)
 	case readElementFromDBError(Error)
+	case saveContextError
 }
 
 struct TrackerStoreUpdate {
@@ -96,7 +97,8 @@ extension DataProvider: IDataProviderProtocol {
 	
 	func getTrackerObject(at indexPath: IndexPath) -> Tracker? {
 		let trackerCoreData = fetchedResultsController.object(at: indexPath)
-		return try? trackerStore.tracker(from: trackerCoreData)
+		guard let tracker = try? trackerStore.tracker(from: trackerCoreData) else { return nil }
+		return tracker
 	}
 	
 	func getTrackerCoreData(at indexPath: IndexPath) -> TrackerCoreData {
@@ -104,12 +106,16 @@ extension DataProvider: IDataProviderProtocol {
 	}
 
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws {
-		try? trackerStore.add(record, in: category)
+		do {
+			try trackerStore.add(record, in: category)
+		} catch {
+			throw StoreErrors.addElementToDBError(error)
+		}
 	}
 	
 	func addCategory(_ category: TrackerCategory) throws -> TrackerCategoryCoreData {
 		do {
-			let newCategory =  try trackerCategoryStore.add(category)
+			let newCategory = try trackerCategoryStore.add(category)
 			return newCategory
 		} catch {
 			throw StoreErrors.addElementToDBError(error)
@@ -153,7 +159,11 @@ extension DataProvider: IDataProviderProtocol {
 	}
 	
 	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws {
-		try? trackerRecordStore.add(trackerRecord, for: tracker)
+		do {
+			try trackerRecordStore.add(trackerRecord, for: tracker)
+		} catch {
+			throw StoreErrors.addElementToDBError(error)
+		}
 	}
 	
 	func deleteRecord(date: Date, trackerID: String) {
