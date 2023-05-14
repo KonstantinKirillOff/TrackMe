@@ -25,7 +25,7 @@ final class ScheduleCell: UITableViewCell {
 		let switcher = UISwitch()
 		switcher.isOn = false
 		switcher.addTarget(self, action: #selector(switchedDidChange), for: .valueChanged)
-		switcher.onTintColor = UIColor(named: "YPBlue")
+		switcher.onTintColor = UIColor.ypBlue
 		return switcher
 	}()
 
@@ -45,7 +45,8 @@ final class ScheduleCell: UITableViewCell {
 	}
 	
 	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+		super.init(coder: coder)
+		assertionFailure("init(coder:) has not been implemented")
 	}
 	
 	func configCell(name: String, delegate: IScheduleCellDelegate, switchedOn: Bool) {

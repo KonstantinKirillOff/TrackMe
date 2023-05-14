@@ -8,11 +8,11 @@
 import UIKit
 
 struct Tracker {
-	let id: UUID = UUID()
+	let id: UUID
 	let name: String
 	let color: UIColor
 	let emoji: String
-	let schedule: Set<Int>
+	let schedule: Set<String>
 }
 
 struct TrackerCategory {
