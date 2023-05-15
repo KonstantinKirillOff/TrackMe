@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		window = UIWindow(frame: UIScreen.main.bounds)
 		window?.makeKeyAndVisible()
-		window?.rootViewController = TabBarViewController()
+		window?.rootViewController = OnboardingViewController(transitionStyle: .pageCurl, navigationOrientation: .horizontal)
 		return true
 	}
 	

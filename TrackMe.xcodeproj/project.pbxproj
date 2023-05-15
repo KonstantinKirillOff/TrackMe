@@ -22,6 +22,9 @@
 		433E3C3F29EDAB1000067202 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E3C3E29EDAB1000067202 /* ScheduleViewController.swift */; };
 		433E3C4129EDABEF00067202 /* ScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E3C4029EDABEF00067202 /* ScheduleCell.swift */; };
 		433E3C4429F4158100067202 /* WeekDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433E3C4329F4158100067202 /* WeekDays.swift */; };
+		4352D9462A112C500024FFEE /* OnboardingScreenOneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9452A112C500024FFEE /* OnboardingScreenOneViewController.swift */; };
+		4352D9482A112C940024FFEE /* OnboardingScreenTwoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9472A112C940024FFEE /* OnboardingScreenTwoViewController.swift */; };
+		4352D94A2A1201C50024FFEE /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9492A1201C50024FFEE /* OnboardingViewController.swift */; };
 		438AD7E429FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E229FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld */; };
 		438AD7E729FEFF1000730601 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E629FEFF1000730601 /* TrackerStore.swift */; };
 		438AD7E929FEFF2B00730601 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E829FEFF2B00730601 /* TrackerCategoryStore.swift */; };
@@ -55,6 +58,9 @@
 		433E3C3E29EDAB1000067202 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		433E3C4029EDABEF00067202 /* ScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCell.swift; sourceTree = "<group>"; };
 		433E3C4329F4158100067202 /* WeekDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekDays.swift; sourceTree = "<group>"; };
+		4352D9452A112C500024FFEE /* OnboardingScreenOneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenOneViewController.swift; sourceTree = "<group>"; };
+		4352D9472A112C940024FFEE /* OnboardingScreenTwoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingScreenTwoViewController.swift; sourceTree = "<group>"; };
+		4352D9492A1201C50024FFEE /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		438AD7E329FEFBC200730601 /* TrackersCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackersCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		438AD7E629FEFF1000730601 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		438AD7E829FEFF2B00730601 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
@@ -101,7 +107,6 @@
 			children = (
 				438AD7E529FEFEF000730601 /* DataStores */,
 				4326C16C29E83B3800A78303 /* Models */,
-				43E990C329FD74A30093C9CB /* CustomUIElements */,
 				4326C16029E7E38E00A78303 /* ViewControllers */,
 				4326C16329E7E3EC00A78303 /* Resources */,
 				433E3C4229F4155900067202 /* Helpers */,
@@ -114,6 +119,7 @@
 		4326C16029E7E38E00A78303 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				4352D9442A112BEE0024FFEE /* OnboardingPageVC */,
 				431564B729D33A3800A1DC3A /* TabBarViewController.swift */,
 				4326C16429E7E49B00A78303 /* StatisticsViewController.swift */,
 				43E990C029FD74210093C9CB /* TrackersCollectionVC */,
@@ -168,6 +174,16 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		4352D9442A112BEE0024FFEE /* OnboardingPageVC */ = {
+			isa = PBXGroup;
+			children = (
+				4352D9492A1201C50024FFEE /* OnboardingViewController.swift */,
+				4352D9452A112C500024FFEE /* OnboardingScreenOneViewController.swift */,
+				4352D9472A112C940024FFEE /* OnboardingScreenTwoViewController.swift */,
+			);
+			path = OnboardingPageVC;
+			sourceTree = "<group>";
+		};
 		438AD7E529FEFEF000730601 /* DataStores */ = {
 			isa = PBXGroup;
 			children = (
@@ -204,6 +220,7 @@
 		43E990C229FD74630093C9CB /* NewTrackerVC */ = {
 			isa = PBXGroup;
 			children = (
+				43E990C329FD74A30093C9CB /* CustomUIElements */,
 				4329314129ED8F6B00D4DB60 /* NewTrackerViewController.swift */,
 				43E990C829FD7FA30093C9CB /* EmojiCell.swift */,
 				43E990CA29FD84120093C9CB /* ColorCell.swift */,
@@ -296,14 +313,17 @@
 				438AD7F129FFB1C700730601 /* TrackerStoreProtocol.swift in Sources */,
 				438AD7F329FFB37300730601 /* TrackerCategoryStoreProtocol.swift in Sources */,
 				4329314029ED801900D4DB60 /* ChooseTrackerViewController.swift in Sources */,
+				4352D9482A112C940024FFEE /* OnboardingScreenTwoViewController.swift in Sources */,
 				431564B829D33A3800A1DC3A /* TabBarViewController.swift in Sources */,
 				431564B429D33A3800A1DC3A /* AppDelegate.swift in Sources */,
 				4326C16729E7E50B00A78303 /* TrackersViewController.swift in Sources */,
 				431564B629D33A3800A1DC3A /* SceneDelegate.swift in Sources */,
+				4352D94A2A1201C50024FFEE /* OnboardingViewController.swift in Sources */,
 				4326C16B29E8354800A78303 /* CardTrackerCell.swift in Sources */,
 				4329314229ED8F6B00D4DB60 /* NewTrackerViewController.swift in Sources */,
 				43E990C729FD778A0093C9CB /* UIColor+Extension.swift in Sources */,
 				43E990CB29FD84120093C9CB /* ColorCell.swift in Sources */,
+				4352D9462A112C500024FFEE /* OnboardingScreenOneViewController.swift in Sources */,
 				4326C16529E7E49B00A78303 /* StatisticsViewController.swift in Sources */,
 				438AD7F529FFB52400730601 /* TrackerRecordStoreProtocol.swift in Sources */,
 				4326C16E29E83B7600A78303 /* Tracker.swift in Sources */,
