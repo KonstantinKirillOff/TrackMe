@@ -7,6 +7,8 @@
 
 import Foundation
 protocol ITrackerCategoryStoreProtocol {
-	func add(_ trackerCategory: TrackerCategory) throws -> TrackerCategoryCoreData
-	func fetchCategory(by name: String) -> TrackerCategoryCoreData?
+	func addNewCategory(_ trackerCategory: TrackerCategory) throws
+	func deleteCategory(by id: String)
+	func changeCategory(by id: String, trackerCategory: TrackerCategory) throws
+	func fetchCategory(by id: String) -> TrackerCategoryCoreData?
 }

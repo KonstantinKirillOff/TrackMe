@@ -14,6 +14,7 @@ enum StoreErrors: Error {
 	case addElementToDBError(Error)
 	case readElementFromDBError(Error)
 	case saveContextError
+	case changeElementError
 }
 
 struct TrackerStoreUpdate {
@@ -32,14 +33,14 @@ protocol IDataProviderProtocol {
 	func nameOfSection(_ section: Int) -> String
 	
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws
-	func addCategory(_ category: TrackerCategory) throws -> TrackerCategoryCoreData
+	//func addCategory(_ category: TrackerCategory) throws
 	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
 	func deleteRecord(date: Date, trackerID: String)
 	
 	func getTrackerCoreData(at indexPath: IndexPath) -> TrackerCoreData
 	func getTrackerObject(at: IndexPath) -> Tracker?
 	
-	func fetchCategory(by name: String) -> TrackerCategoryCoreData?
+	//func fetchCategory(by name: String) -> TrackerCategoryCoreData?
 	func fetchResultControllerIsEmpty() -> Bool
 	
 	func countRecordForTracker(trackerID: String) -> Int
@@ -107,24 +108,23 @@ extension DataProvider: IDataProviderProtocol {
 
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws {
 		do {
-			try trackerStore.add(record, in: category)
+			try trackerStore.addNewTracker(record, in: category)
 		} catch {
 			throw StoreErrors.addElementToDBError(error)
 		}
 	}
 	
-	func addCategory(_ category: TrackerCategory) throws -> TrackerCategoryCoreData {
-		do {
-			let newCategory = try trackerCategoryStore.add(category)
-			return newCategory
-		} catch {
-			throw StoreErrors.addElementToDBError(error)
-		}
-	}
+//	func addCategory(_ category: TrackerCategory) throws {
+//		do {
+//			try trackerCategoryStore.addNewCategory(category)
+//		} catch {
+//			throw StoreErrors.addElementToDBError(error)
+//		}
+//	}
 	
-	func fetchCategory(by name: String) -> TrackerCategoryCoreData? {
-		trackerCategoryStore.fetchCategory(by: name)
-	}
+//	func fetchCategory(by name: String) -> TrackerCategoryCoreData? {
+//		trackerCategoryStore.fetchCategory(by: name)
+//	}
 	
 	func fetchResultControllerIsEmpty() -> Bool {
 		fetchedResultsController.fetchedObjects?.count == 0
@@ -160,7 +160,7 @@ extension DataProvider: IDataProviderProtocol {
 	
 	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws {
 		do {
-			try trackerRecordStore.add(trackerRecord, for: tracker)
+			try trackerRecordStore.addNewRecord(trackerRecord, for: tracker)
 		} catch {
 			throw StoreErrors.addElementToDBError(error)
 		}

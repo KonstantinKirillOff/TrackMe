@@ -31,7 +31,6 @@ final class BaseTextField: UITextField {
 		font = UIFont.systemFont(ofSize: 17)
 		backgroundColor = UIColor.ypBackground
 		layer.cornerRadius = 16
-		placeholder  = "Введите название трэкера"
 	}
 	
 	required init?(coder: NSCoder) {

@@ -37,6 +37,7 @@ final class NewTrackerViewController: UIViewController {
 	
 	private lazy var nameTrackerTextField: UITextField = {
 		let textField = BaseTextField()
+		textField.placeholder  = "Введите название трэкера"
 		return textField
 	}()
 	

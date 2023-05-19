@@ -17,13 +17,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		window = UIWindow(frame: UIScreen.main.bounds)
 		window?.makeKeyAndVisible()
-		window?.rootViewController = OnboardingViewController(transitionStyle: .pageCurl, navigationOrientation: .horizontal)
+		//window?.rootViewController = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+		
+		let vc = NewCategoryViewController()
+		let model = CategoryModel(categoryStore: TrackerCategoryStore())
+		let vm = CategoryViewModel(for: model)
+		vc.initialise(viewModel: vm)
+		window?.rootViewController = vc
+		
 		return true
 	}
 	
 	lazy var persistentContainer: NSPersistentContainer = {
 		let container = NSPersistentContainer(name: "TrackersCoreDataModel")
 		container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+			print("storeDescription: \(storeDescription)")
 			if let error = error as NSError? {
 				assertionFailure("Unresolved error \(error), \(error.userInfo)")
 			}
