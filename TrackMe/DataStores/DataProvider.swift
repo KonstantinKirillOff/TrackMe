@@ -33,19 +33,17 @@ protocol IDataProviderProtocol {
 	func nameOfSection(_ section: Int) -> String
 	
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws
-	//func addCategory(_ category: TrackerCategory) throws
-	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
-	func deleteRecord(date: Date, trackerID: String)
-	
 	func getTrackerCoreData(at indexPath: IndexPath) -> TrackerCoreData
 	func getTrackerObject(at: IndexPath) -> Tracker?
 	
-	//func fetchCategory(by name: String) -> TrackerCategoryCoreData?
-	func fetchResultControllerIsEmpty() -> Bool
-	
 	func countRecordForTracker(trackerID: String) -> Int
 	func trackerTrackedToday(date: Date, trackerID: String) -> Bool
+	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
+	func deleteRecord(date: Date, trackerID: String)
 	
+	func fetchCategory(by id: String) -> TrackerCategoryCoreData?
+	
+	func fetchResultControllerIsEmpty() -> Bool
 	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date) throws
 }
 
@@ -114,17 +112,9 @@ extension DataProvider: IDataProviderProtocol {
 		}
 	}
 	
-//	func addCategory(_ category: TrackerCategory) throws {
-//		do {
-//			try trackerCategoryStore.addNewCategory(category)
-//		} catch {
-//			throw StoreErrors.addElementToDBError(error)
-//		}
-//	}
-	
-//	func fetchCategory(by name: String) -> TrackerCategoryCoreData? {
-//		trackerCategoryStore.fetchCategory(by: name)
-//	}
+	func fetchCategory(by id: String) -> TrackerCategoryCoreData? {
+		trackerCategoryStore.fetchCategory(by: id)
+	}
 	
 	func fetchResultControllerIsEmpty() -> Bool {
 		fetchedResultsController.fetchedObjects?.count == 0

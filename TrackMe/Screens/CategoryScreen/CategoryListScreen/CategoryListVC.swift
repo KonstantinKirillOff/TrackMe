@@ -8,11 +8,14 @@
 import UIKit
 
 final class CategoryListViewController: UIViewController {
+	private var viewModel: CategoryListViewModel!
+	
 	private lazy var headerLabel: UILabel = {
 		let label = UILabel()
 		label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 		label.text = "Категория"
 		label.textAlignment = .center
+		label.translatesAutoresizingMaskIntoConstraints = false
 		return label
 	}()
 	
@@ -24,6 +27,7 @@ final class CategoryListViewController: UIViewController {
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(addCategoryButtonPressed), for: .touchUpInside)
+		button.translatesAutoresizingMaskIntoConstraints = false
 		return button
 	}()
 	
@@ -62,6 +66,7 @@ final class CategoryListViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupView()
+		setupTableView()
 		setupUIElements()
 		setupStubEmpty()
 	}
@@ -72,8 +77,6 @@ final class CategoryListViewController: UIViewController {
 	
 	private func setupUIElements() {
 		view.addSubview(headerLabel)
-		headerLabel.translatesAutoresizingMaskIntoConstraints = false
-		
 		NSLayoutConstraint.activate([
 			headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 			headerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -81,13 +84,24 @@ final class CategoryListViewController: UIViewController {
 		])
 		
 		view.addSubview(addCategoryButton)
-		addCategoryButton.translatesAutoresizingMaskIntoConstraints = false
-		
 		NSLayoutConstraint.activate([
 			addCategoryButton.heightAnchor.constraint(equalToConstant: 60),
 			addCategoryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
 			addCategoryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 			addCategoryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+		])
+	}
+	
+	func setupTableView() {
+		tableView.dataSource = self
+		tableView.delegate = self
+		
+		view.addSubview(tableView)
+		NSLayoutConstraint.activate([
+			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+			tableView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
+			tableView.heightAnchor.constraint(equalToConstant: CGFloat(WeekDay.allCases.count * 75))
 		])
 	}
 	
@@ -104,5 +118,26 @@ final class CategoryListViewController: UIViewController {
 	@objc private func addCategoryButtonPressed(_ sender: UIButton) {
 		let createCategoryVC = NewCategoryViewController()
 		present(createCategoryVC, animated: true)
+	}
+}
+
+extension CategoryListViewController: UITableViewDataSource {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		viewModel.categories.count
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: CategoryListCell.identifier, for: indexPath) as! CategoryListCell
+		let category = viewModel.categories[indexPath.row]
+		cell.configCell(name: category.name, isSelectedCategory: category.id == viewModel.selectedCategory?.id )
+		return cell
+	}
+}
+
+extension CategoryListViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let category = viewModel.categories[indexPath.row]
+		viewModel.selectCategory(category: category)
+		tableView.reloadRows(at: [indexPath], with: .automatic)
 	}
 }

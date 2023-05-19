@@ -7,10 +7,10 @@
 
 import Foundation
 
-protocol ICategoryViewModelProtocol: NSObject {
-	func checkCategoryName(name: String?)
-	func addNewCategory(category: TrackerCategory)
-}
+//protocol ICategoryViewModelProtocol: NSObject {
+//	func checkCategoryName(name: String?)
+//	func addNewCategory(category: TrackerCategory)
+//}
 
 @objcMembers
 final class CategoryViewModel: NSObject {

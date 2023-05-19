@@ -30,6 +30,8 @@
 		4352D9512A1625610024FFEE /* NewCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9502A1625610024FFEE /* NewCategoryVC.swift */; };
 		4352D9552A167F000024FFEE /* CategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9542A167F000024FFEE /* CategoryModel.swift */; };
 		4352D9572A167F230024FFEE /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9562A167F230024FFEE /* CategoryViewModel.swift */; };
+		4352D9592A177BAA0024FFEE /* CategoryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9582A177BAA0024FFEE /* CategoryListModel.swift */; };
+		4352D95B2A177BBA0024FFEE /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D95A2A177BBA0024FFEE /* CategoryListViewModel.swift */; };
 		438AD7E429FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E229FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld */; };
 		438AD7E729FEFF1000730601 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E629FEFF1000730601 /* TrackerStore.swift */; };
 		438AD7E929FEFF2B00730601 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E829FEFF2B00730601 /* TrackerCategoryStore.swift */; };
@@ -71,6 +73,8 @@
 		4352D9502A1625610024FFEE /* NewCategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryVC.swift; sourceTree = "<group>"; };
 		4352D9542A167F000024FFEE /* CategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryModel.swift; sourceTree = "<group>"; };
 		4352D9562A167F230024FFEE /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
+		4352D9582A177BAA0024FFEE /* CategoryListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListModel.swift; sourceTree = "<group>"; };
+		4352D95A2A177BBA0024FFEE /* CategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewModel.swift; sourceTree = "<group>"; };
 		438AD7E329FEFBC200730601 /* TrackersCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackersCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		438AD7E629FEFF1000730601 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		438AD7E829FEFF2B00730601 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
@@ -117,7 +121,7 @@
 			children = (
 				438AD7E529FEFEF000730601 /* DataStores */,
 				4326C16C29E83B3800A78303 /* Models */,
-				4326C16029E7E38E00A78303 /* ViewControllers */,
+				4326C16029E7E38E00A78303 /* Screens */,
 				43E990C329FD74A30093C9CB /* CustomUIElements */,
 				4326C16329E7E3EC00A78303 /* Resources */,
 				433E3C4229F4155900067202 /* Helpers */,
@@ -127,19 +131,19 @@
 			path = TrackMe;
 			sourceTree = "<group>";
 		};
-		4326C16029E7E38E00A78303 /* ViewControllers */ = {
+		4326C16029E7E38E00A78303 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				4352D9442A112BEE0024FFEE /* OnboardingPageVC */,
+				4352D9442A112BEE0024FFEE /* OnboardingScreen */,
 				431564B729D33A3800A1DC3A /* TabBarViewController.swift */,
 				4326C16429E7E49B00A78303 /* StatisticsViewController.swift */,
 				43E990C029FD74210093C9CB /* TrackersCollectionVC */,
 				4329313F29ED801900D4DB60 /* ChooseTrackerViewController.swift */,
-				43E990C229FD74630093C9CB /* NewTrackerVC */,
-				4352D94B2A16234C0024FFEE /* CategoryVC */,
+				43E990C229FD74630093C9CB /* NewTrackerScreen */,
+				4352D94B2A16234C0024FFEE /* CategoryScreen */,
 				43E990C129FD74450093C9CB /* ScheduleVC */,
 			);
-			path = ViewControllers;
+			path = Screens;
 			sourceTree = "<group>";
 		};
 		4326C16129E7E3B600A78303 /* App */ = {
@@ -186,42 +190,44 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		4352D9442A112BEE0024FFEE /* OnboardingPageVC */ = {
+		4352D9442A112BEE0024FFEE /* OnboardingScreen */ = {
 			isa = PBXGroup;
 			children = (
 				4352D9492A1201C50024FFEE /* OnboardingViewController.swift */,
 				4352D9452A112C500024FFEE /* OnboardingScreenOneViewController.swift */,
 				4352D9472A112C940024FFEE /* OnboardingScreenTwoViewController.swift */,
 			);
-			path = OnboardingPageVC;
+			path = OnboardingScreen;
 			sourceTree = "<group>";
 		};
-		4352D94B2A16234C0024FFEE /* CategoryVC */ = {
+		4352D94B2A16234C0024FFEE /* CategoryScreen */ = {
 			isa = PBXGroup;
 			children = (
-				4352D9532A167D7D0024FFEE /* NewCategory */,
-				4352D9522A167D650024FFEE /* CategoryList */,
+				4352D9532A167D7D0024FFEE /* NewCategoryScreen */,
+				4352D9522A167D650024FFEE /* CategoryListScreen */,
 			);
-			path = CategoryVC;
+			path = CategoryScreen;
 			sourceTree = "<group>";
 		};
-		4352D9522A167D650024FFEE /* CategoryList */ = {
+		4352D9522A167D650024FFEE /* CategoryListScreen */ = {
 			isa = PBXGroup;
 			children = (
 				4352D94C2A1623E50024FFEE /* CategoryListVC.swift */,
 				4352D94E2A1624050024FFEE /* CategoryListCell.swift */,
+				4352D9582A177BAA0024FFEE /* CategoryListModel.swift */,
+				4352D95A2A177BBA0024FFEE /* CategoryListViewModel.swift */,
 			);
-			path = CategoryList;
+			path = CategoryListScreen;
 			sourceTree = "<group>";
 		};
-		4352D9532A167D7D0024FFEE /* NewCategory */ = {
+		4352D9532A167D7D0024FFEE /* NewCategoryScreen */ = {
 			isa = PBXGroup;
 			children = (
 				4352D9502A1625610024FFEE /* NewCategoryVC.swift */,
 				4352D9542A167F000024FFEE /* CategoryModel.swift */,
 				4352D9562A167F230024FFEE /* CategoryViewModel.swift */,
 			);
-			path = NewCategory;
+			path = NewCategoryScreen;
 			sourceTree = "<group>";
 		};
 		438AD7E529FEFEF000730601 /* DataStores */ = {
@@ -257,14 +263,14 @@
 			path = ScheduleVC;
 			sourceTree = "<group>";
 		};
-		43E990C229FD74630093C9CB /* NewTrackerVC */ = {
+		43E990C229FD74630093C9CB /* NewTrackerScreen */ = {
 			isa = PBXGroup;
 			children = (
 				4329314129ED8F6B00D4DB60 /* NewTrackerViewController.swift */,
 				43E990C829FD7FA30093C9CB /* EmojiCell.swift */,
 				43E990CA29FD84120093C9CB /* ColorCell.swift */,
 			);
-			path = NewTrackerVC;
+			path = NewTrackerScreen;
 			sourceTree = "<group>";
 		};
 		43E990C329FD74A30093C9CB /* CustomUIElements */ = {
@@ -347,6 +353,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				43E990C529FD74D10093C9CB /* CustomTextField.swift in Sources */,
+				4352D9592A177BAA0024FFEE /* CategoryListModel.swift in Sources */,
 				433E3C4429F4158100067202 /* WeekDays.swift in Sources */,
 				438AD7E729FEFF1000730601 /* TrackerStore.swift in Sources */,
 				438AD7F129FFB1C700730601 /* TrackerStoreProtocol.swift in Sources */,
@@ -369,6 +376,7 @@
 				438AD7F529FFB52400730601 /* TrackerRecordStoreProtocol.swift in Sources */,
 				4352D94D2A1623E50024FFEE /* CategoryListVC.swift in Sources */,
 				4326C16E29E83B7600A78303 /* Tracker.swift in Sources */,
+				4352D95B2A177BBA0024FFEE /* CategoryListViewModel.swift in Sources */,
 				433E3C3F29EDAB1000067202 /* ScheduleViewController.swift in Sources */,
 				433E3C4129EDABEF00067202 /* ScheduleCell.swift in Sources */,
 				4352D9572A167F230024FFEE /* CategoryViewModel.swift in Sources */,
