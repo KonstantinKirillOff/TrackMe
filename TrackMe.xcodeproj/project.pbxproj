@@ -30,8 +30,9 @@
 		4352D9512A1625610024FFEE /* NewCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9502A1625610024FFEE /* NewCategoryVC.swift */; };
 		4352D9552A167F000024FFEE /* CategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9542A167F000024FFEE /* CategoryModel.swift */; };
 		4352D9572A167F230024FFEE /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9562A167F230024FFEE /* CategoryViewModel.swift */; };
-		4352D9592A177BAA0024FFEE /* CategoryListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9582A177BAA0024FFEE /* CategoryListModel.swift */; };
 		4352D95B2A177BBA0024FFEE /* CategoryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D95A2A177BBA0024FFEE /* CategoryListViewModel.swift */; };
+		4352D95D2A18B92F0024FFEE /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D95C2A18B92F0024FFEE /* Observable.swift */; };
+		4352D95F2A18CD080024FFEE /* CategoryElementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D95E2A18CD080024FFEE /* CategoryElementViewModel.swift */; };
 		438AD7E429FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E229FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld */; };
 		438AD7E729FEFF1000730601 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E629FEFF1000730601 /* TrackerStore.swift */; };
 		438AD7E929FEFF2B00730601 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E829FEFF2B00730601 /* TrackerCategoryStore.swift */; };
@@ -73,8 +74,9 @@
 		4352D9502A1625610024FFEE /* NewCategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryVC.swift; sourceTree = "<group>"; };
 		4352D9542A167F000024FFEE /* CategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryModel.swift; sourceTree = "<group>"; };
 		4352D9562A167F230024FFEE /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
-		4352D9582A177BAA0024FFEE /* CategoryListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListModel.swift; sourceTree = "<group>"; };
 		4352D95A2A177BBA0024FFEE /* CategoryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListViewModel.swift; sourceTree = "<group>"; };
+		4352D95C2A18B92F0024FFEE /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		4352D95E2A18CD080024FFEE /* CategoryElementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryElementViewModel.swift; sourceTree = "<group>"; };
 		438AD7E329FEFBC200730601 /* TrackersCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackersCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		438AD7E629FEFF1000730601 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		438AD7E829FEFF2B00730601 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
@@ -137,11 +139,11 @@
 				4352D9442A112BEE0024FFEE /* OnboardingScreen */,
 				431564B729D33A3800A1DC3A /* TabBarViewController.swift */,
 				4326C16429E7E49B00A78303 /* StatisticsViewController.swift */,
-				43E990C029FD74210093C9CB /* TrackersCollectionVC */,
+				43E990C029FD74210093C9CB /* TrackersScreen */,
 				4329313F29ED801900D4DB60 /* ChooseTrackerViewController.swift */,
 				43E990C229FD74630093C9CB /* NewTrackerScreen */,
 				4352D94B2A16234C0024FFEE /* CategoryScreen */,
-				43E990C129FD74450093C9CB /* ScheduleVC */,
+				43E990C129FD74450093C9CB /* ScheduleScreen */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -214,8 +216,9 @@
 			children = (
 				4352D94C2A1623E50024FFEE /* CategoryListVC.swift */,
 				4352D94E2A1624050024FFEE /* CategoryListCell.swift */,
-				4352D9582A177BAA0024FFEE /* CategoryListModel.swift */,
+				4352D95C2A18B92F0024FFEE /* Observable.swift */,
 				4352D95A2A177BBA0024FFEE /* CategoryListViewModel.swift */,
+				4352D95E2A18CD080024FFEE /* CategoryElementViewModel.swift */,
 			);
 			path = CategoryListScreen;
 			sourceTree = "<group>";
@@ -244,23 +247,23 @@
 			path = DataStores;
 			sourceTree = "<group>";
 		};
-		43E990C029FD74210093C9CB /* TrackersCollectionVC */ = {
+		43E990C029FD74210093C9CB /* TrackersScreen */ = {
 			isa = PBXGroup;
 			children = (
 				4326C16629E7E50B00A78303 /* TrackersViewController.swift */,
 				4326C16A29E8354800A78303 /* CardTrackerCell.swift */,
 				432447F329EC20FD00649596 /* HeaderView.swift */,
 			);
-			path = TrackersCollectionVC;
+			path = TrackersScreen;
 			sourceTree = "<group>";
 		};
-		43E990C129FD74450093C9CB /* ScheduleVC */ = {
+		43E990C129FD74450093C9CB /* ScheduleScreen */ = {
 			isa = PBXGroup;
 			children = (
 				433E3C3E29EDAB1000067202 /* ScheduleViewController.swift */,
 				433E3C4029EDABEF00067202 /* ScheduleCell.swift */,
 			);
-			path = ScheduleVC;
+			path = ScheduleScreen;
 			sourceTree = "<group>";
 		};
 		43E990C229FD74630093C9CB /* NewTrackerScreen */ = {
@@ -353,14 +356,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				43E990C529FD74D10093C9CB /* CustomTextField.swift in Sources */,
-				4352D9592A177BAA0024FFEE /* CategoryListModel.swift in Sources */,
 				433E3C4429F4158100067202 /* WeekDays.swift in Sources */,
 				438AD7E729FEFF1000730601 /* TrackerStore.swift in Sources */,
+				4352D95D2A18B92F0024FFEE /* Observable.swift in Sources */,
 				438AD7F129FFB1C700730601 /* TrackerStoreProtocol.swift in Sources */,
 				438AD7F329FFB37300730601 /* TrackerCategoryStoreProtocol.swift in Sources */,
 				4329314029ED801900D4DB60 /* ChooseTrackerViewController.swift in Sources */,
 				4352D9482A112C940024FFEE /* OnboardingScreenTwoViewController.swift in Sources */,
 				431564B829D33A3800A1DC3A /* TabBarViewController.swift in Sources */,
+				4352D95F2A18CD080024FFEE /* CategoryElementViewModel.swift in Sources */,
 				431564B429D33A3800A1DC3A /* AppDelegate.swift in Sources */,
 				4352D94F2A1624050024FFEE /* CategoryListCell.swift in Sources */,
 				4326C16729E7E50B00A78303 /* TrackersViewController.swift in Sources */,

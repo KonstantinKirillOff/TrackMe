@@ -39,6 +39,7 @@ final class CategoryListViewController: UIViewController {
 		tableView.layer.cornerRadius = 16
 		tableView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMaxYCorner]
 		tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.identifier)
+		tableView.translatesAutoresizingMaskIntoConstraints = false
 		return tableView
 	}()
 	
@@ -58,10 +59,9 @@ final class CategoryListViewController: UIViewController {
 		stackView.spacing = 10
 		stackView.addArrangedSubview(image)
 		stackView.addArrangedSubview(titleLabel)
-		
+		stackView.translatesAutoresizingMaskIntoConstraints = false
 		return stackView
 	}()
-
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -69,6 +69,20 @@ final class CategoryListViewController: UIViewController {
 		setupTableView()
 		setupUIElements()
 		setupStubEmpty()
+		checkEmptyCategories()
+	}
+	
+	func initialise(viewModel: CategoryListViewModel) {
+		self.viewModel = viewModel
+		bind()
+	}
+	
+	private func bind() {
+		guard let viewModel = viewModel else { return }
+		viewModel.$categories.bind { [weak self] _ in
+			guard let self = self else { return }
+			self.tableView.reloadData()
+		}
 	}
 	
 	private func setupView() {
@@ -92,7 +106,7 @@ final class CategoryListViewController: UIViewController {
 		])
 	}
 	
-	func setupTableView() {
+	private func setupTableView() {
 		tableView.dataSource = self
 		tableView.delegate = self
 		
@@ -101,22 +115,28 @@ final class CategoryListViewController: UIViewController {
 			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 			tableView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
-			tableView.heightAnchor.constraint(equalToConstant: CGFloat(WeekDay.allCases.count * 75))
+			tableView.heightAnchor.constraint(equalToConstant: CGFloat(viewModel.categories.count * 75))
 		])
 	}
 	
 	private func setupStubEmpty() {
 		view.addSubview(emptyStub)
-		emptyStub.translatesAutoresizingMaskIntoConstraints = false
-		
 		NSLayoutConstraint.activate([
 			emptyStub.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
 			emptyStub.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
 		])
 	}
 	
+	func checkEmptyCategories() {
+		emptyStub.isHidden = viewModel.categoryListIsEmpty()
+	}
+	
 	@objc private func addCategoryButtonPressed(_ sender: UIButton) {
 		let createCategoryVC = NewCategoryViewController()
+		let categoryModel = CategoryModel(categoryStore: TrackerCategoryStore())
+		let categoryVM = CategoryViewModel(for: categoryModel)
+		createCategoryVC.initialise(viewModel: categoryVM)
+	
 		present(createCategoryVC, animated: true)
 	}
 }
@@ -129,7 +149,7 @@ extension CategoryListViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: CategoryListCell.identifier, for: indexPath) as! CategoryListCell
 		let category = viewModel.categories[indexPath.row]
-		cell.configCell(name: category.name, isSelectedCategory: category.id == viewModel.selectedCategory?.id )
+		cell.configCell(name: category.name, isSelectedCategory: category.selectedCategory)
 		return cell
 	}
 }
@@ -138,6 +158,6 @@ extension CategoryListViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let category = viewModel.categories[indexPath.row]
 		viewModel.selectCategory(category: category)
-		tableView.reloadRows(at: [indexPath], with: .automatic)
+		//tableView.reloadRows(at: [indexPath], with: .automatic)
 	}
 }

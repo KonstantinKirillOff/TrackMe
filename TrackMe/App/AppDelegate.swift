@@ -14,17 +14,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-		
 		window = UIWindow(frame: UIScreen.main.bounds)
 		window?.makeKeyAndVisible()
-		//window?.rootViewController = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-		
-		let vc = NewCategoryViewController()
-		let model = CategoryModel(categoryStore: TrackerCategoryStore())
-		let vm = CategoryViewModel(for: model)
-		vc.initialise(viewModel: vm)
-		window?.rootViewController = vc
-		
+		window?.rootViewController = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+
 		return true
 	}
 	

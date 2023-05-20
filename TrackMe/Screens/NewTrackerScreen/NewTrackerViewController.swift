@@ -327,6 +327,11 @@ extension NewTrackerViewController: UITableViewDelegate {
 			let scheduleVC = ScheduleViewController()
 			scheduleVC.delegate = self
 			present(scheduleVC, animated: true)
+		} else {
+			let categoryListVM = CategoryListViewModel(categoryStore: TrackerCategoryStore())
+			let categoryListVC = CategoryListViewController()
+			categoryListVC.initialise(viewModel: categoryListVM)
+			present(categoryListVC, animated: true)
 		}
 	}
 }

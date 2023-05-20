@@ -8,11 +8,39 @@
 import UIKit
 import CoreData
 
+protocol ITrackerCategoryStoreDelegate: AnyObject {
+	func categoriesDidUpdate()
+}
+
 final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
+	var categories: [TrackerCategoryCoreData] {
+		return self.fetchedResultsController.fetchedObjects ?? []
+	}
+	
+	weak var delegate: ITrackerCategoryStoreDelegate?
+	
 	private let context: NSManagedObjectContext
+	
+	private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData> = {
+
+		let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCoreData")
+		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.name, ascending: true)]
+		
+		let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+																  managedObjectContext: context,
+																  sectionNameKeyPath: nil,
+																  cacheName: nil)
+		fetchedResultsController.delegate = self
+		try? fetchedResultsController.performFetch()
+		return fetchedResultsController
+	}()
 	
 	override init() {
 		self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+	}
+	
+	func setDelegate(delegateForStore: ITrackerCategoryStoreDelegate) {
+		delegate = delegateForStore
 	}
 
 	func addNewCategory(_ trackerCategory: TrackerCategory) throws {
@@ -54,5 +82,16 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 			categoryForChange.name = trackerCategory.name
 			try context.save()
 		}
+	}
+	
+	func categoryListIsEmpty() -> Bool {
+		fetchedResultsController.fetchedObjects?.count == 0
+	}
+}
+
+// MARK: - NSFetchedResultsControllerDelegate
+extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
+	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		delegate?.categoriesDidUpdate()
 	}
 }

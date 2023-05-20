@@ -8,16 +8,42 @@
 import Foundation
 
 final class CategoryListViewModel {
-	private(set) var categories: [TrackerCategory] = []
-	private(set) var selectedCategory: TrackerCategory?
+	@Observable
+	private(set) var categories: [CategoryElementViewModel] = []
 	
-	private let model: CategoryListModel
+	private(set) var selectedCategory: CategoryElementViewModel?
+	private let categoryStore: ITrackerCategoryStoreProtocol
 	
-	init(for model: CategoryListModel) {
-		self.model = model
+	init(categoryStore: ITrackerCategoryStoreProtocol) {
+		self.categoryStore = categoryStore
+		self.categoryStore.setDelegate(delegateForStore: self)
+		self.categories = getCategoriesFromStore()
 	}
 	
-	func selectCategory(category: TrackerCategory) {
-		selectCategory(category: category)
+	func selectCategory(category: CategoryElementViewModel) {
+		selectedCategory = category
+		categories = getCategoriesFromStore()
+	}
+	
+	func categoryListIsEmpty() -> Bool {
+		categoryStore.categoryListIsEmpty()
+	}
+	
+	private func getCategoriesFromStore() -> [CategoryElementViewModel] {
+		return categoryStore.categories.map {
+			let uuidString = $0.categoryID!
+			let name = $0.name!
+			
+			return CategoryElementViewModel(id: uuidString,
+											name: name,
+											selectedCategory: uuidString == selectedCategory?.id
+			)
+		}
+	}
+}
+
+extension CategoryListViewModel: ITrackerCategoryStoreDelegate {
+	func categoriesDidUpdate() {
+		categories = getCategoriesFromStore()
 	}
 }
