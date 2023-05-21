@@ -7,11 +7,6 @@
 
 import Foundation
 
-//protocol ICategoryViewModelProtocol: NSObject {
-//	func checkCategoryName(name: String?)
-//	func addNewCategory(category: TrackerCategory)
-//}
-
 @objcMembers
 final class CategoryViewModel: NSObject {
 	dynamic private(set) var categoryNameIsEmpty: Bool = true
@@ -29,7 +24,3 @@ final class CategoryViewModel: NSObject {
 		model.addNewCategory(category: category)
 	}
 }
-
-//extension CategoryViewModel: ICategoryViewModelProtocol {
-//	
-//}

@@ -34,6 +34,7 @@
 		4352D95D2A18B92F0024FFEE /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D95C2A18B92F0024FFEE /* Observable.swift */; };
 		4352D95F2A18CD080024FFEE /* CategoryElementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D95E2A18CD080024FFEE /* CategoryElementViewModel.swift */; };
 		4352D9622A1A6EFE0024FFEE /* ChangeCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9612A1A6EFE0024FFEE /* ChangeCategoryVC.swift */; };
+		4352D9652A1A760F0024FFEE /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4352D9642A1A760F0024FFEE /* AlertPresenter.swift */; };
 		438AD7E429FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E229FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld */; };
 		438AD7E729FEFF1000730601 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E629FEFF1000730601 /* TrackerStore.swift */; };
 		438AD7E929FEFF2B00730601 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438AD7E829FEFF2B00730601 /* TrackerCategoryStore.swift */; };
@@ -79,6 +80,7 @@
 		4352D95C2A18B92F0024FFEE /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		4352D95E2A18CD080024FFEE /* CategoryElementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryElementViewModel.swift; sourceTree = "<group>"; };
 		4352D9612A1A6EFE0024FFEE /* ChangeCategoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeCategoryVC.swift; sourceTree = "<group>"; };
+		4352D9642A1A760F0024FFEE /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		438AD7E329FEFBC200730601 /* TrackersCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackersCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		438AD7E629FEFF1000730601 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		438AD7E829FEFF2B00730601 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 		4352D9632A1A74E60024FFEE /* Alerts */ = {
 			isa = PBXGroup;
 			children = (
+				4352D9642A1A760F0024FFEE /* AlertPresenter.swift */,
 			);
 			path = Alerts;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				4326C16729E7E50B00A78303 /* TrackersViewController.swift in Sources */,
 				431564B629D33A3800A1DC3A /* SceneDelegate.swift in Sources */,
 				4352D94A2A1201C50024FFEE /* OnboardingViewController.swift in Sources */,
+				4352D9652A1A760F0024FFEE /* AlertPresenter.swift in Sources */,
 				4326C16B29E8354800A78303 /* CardTrackerCell.swift in Sources */,
 				4329314229ED8F6B00D4DB60 /* NewTrackerViewController.swift in Sources */,
 				43E990C729FD778A0093C9CB /* UIColor+Extension.swift in Sources */,

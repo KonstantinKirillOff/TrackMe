@@ -18,13 +18,7 @@ enum StoreErrors: Error {
 	case deleteElementError
 }
 
-struct TrackerStoreUpdate {
-	let insertedRow: Int
-	let insertedSection: Int
-}
-
 protocol IDataProviderDelegate: AnyObject {
-	//func trackersStoreDidUpdate(_ update: TrackerStoreUpdate) - в следующем спринте буду разбираться с обновлением по индексу
 	func trackersStoreDidUpdate()
 }
 
@@ -57,12 +51,11 @@ final class DataProvider: NSObject {
 	private let trackerStore: ITrackerStoreProtocol
 	private let trackerCategoryStore: ITrackerCategoryStoreProtocol
 	private let trackerRecordStore: ITrackerRecordStoreProtocol
-	private var insertedIndexes: TrackerStoreUpdate?
 	
 	private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
 
 		let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCoreData.category, ascending: true)]
+		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCoreData.category?.name, ascending: true)]
 		
 		let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
 																  managedObjectContext: context,
@@ -173,25 +166,7 @@ extension DataProvider: IDataProviderProtocol {
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension DataProvider: NSFetchedResultsControllerDelegate {
-	//	func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-	//		insertedIndexes = TrackerStoreUpdate(insertedRow: 0, insertedSection: 0)
-	//	} - буду дальше разбираться в следующем спринте
-
 	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//		delegate?.trackersStoreDidUpdate(insertedIndexes!) - буду дальше разбираться в следующем спринте
-//		insertedIndexes = nil
 		delegate?.trackersStoreDidUpdate()
-	}
-	
-	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-		
-//		switch type {
-//		case .insert:
-//			if let indexPath = newIndexPath {
-//				insertedIndexes = TrackerStoreUpdate(insertedRow: indexPath.row, insertedSection: indexPath.section)
-//			}
-//		default:
-//			break
-//		} - буду дальше разбираться в следующем спринте
 	}
 }

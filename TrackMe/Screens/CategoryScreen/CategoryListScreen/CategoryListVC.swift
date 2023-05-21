@@ -14,6 +14,7 @@ protocol ICategoryListViewControllerDelegate: AnyObject {
 final class CategoryListViewController: UIViewController {
 	weak var delegate: ICategoryListViewControllerDelegate?
 	
+	private var alertPresenter: IAlertPresenterProtocol!
 	private var viewModel: CategoryListViewModel!
 	
 	private lazy var headerLabel: UILabel = {
@@ -74,6 +75,8 @@ final class CategoryListViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		alertPresenter = AlertPresenter(delegate: self)
+		
 		setupView()
 		setupUIElements()
 		setupTableView()
@@ -141,27 +144,30 @@ final class CategoryListViewController: UIViewController {
 	}
 	
 	private func deleteCategory(indexPath: IndexPath) {
-		let alert = UIAlertController(title: nil,
-									  message: "Эта категория точно не нужна?",
-									  preferredStyle: .actionSheet)
 		let deleteAction = UIAlertAction(title: "Удалить",
-										 style: .destructive) { _ in
+										 style: .destructive) { [weak self] _ in
+			guard let self = self else { return }
 			let category = self.viewModel.categories[indexPath.row]
-			try? self.viewModel.deleteCategory(by: category.id)
-			self.checkEmptyCategories()
+			do {
+				try self.viewModel.deleteCategory(by: category.id)
+				self.checkEmptyCategories()
+			} catch {
+				//TODO: show alert
+				print("Category: \(category.name) don't deleted!")
+			}
 		}
 		
 		let closeAction = UIAlertAction(title: "Отменить",
 										style: .cancel)
 		
-		alert.addAction(deleteAction)
-		alert.addAction(closeAction)
-		present(alert, animated: true)
+		alertPresenter.preparingAlertController(alertTitle: nil,
+												alertMessage: "Эта категория точно не нужна?",
+												alertActions: [deleteAction, closeAction],
+												alertType: .actionSheet)
 	}
 	
 	private func changeCategory(indexPath: IndexPath) {
 		let category = viewModel.categories[indexPath.row]
-		
 		let changeCategoryVC = ChangeCategoryViewController()
 		changeCategoryVC.delegate = self
 		changeCategoryVC.initialise(category: category)
@@ -174,7 +180,6 @@ final class CategoryListViewController: UIViewController {
 		let categoryVM = CategoryViewModel(for: categoryModel)
 		createCategoryVC.delegate = self
 		createCategoryVC.initialise(viewModel: categoryVM)
-	
 		present(createCategoryVC, animated: true)
 	}
 }
@@ -235,5 +240,11 @@ extension CategoryListViewController: IChangeCategoryViewControllerDelegate {
 				print("Category: \(category.name) don't changed!")
 			}
 		}
+	}
+}
+
+extension CategoryListViewController: IAlertPresenterDelegate {
+	func showAlert(alert: UIAlertController) {
+		self.present(alert, animated: true)
 	}
 }

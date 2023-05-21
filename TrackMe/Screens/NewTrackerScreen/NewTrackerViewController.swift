@@ -290,7 +290,7 @@ final class NewTrackerViewController: UIViewController {
 		let setWithWeekDays = weekSchedule.isEmpty ? Set([currentDayWeek]) : Set(weekSchedule.map({$0.key}))
 		let newTracker = Tracker(id: UUID(),
 								 name: trackName,
-								 color: currentColor ?? .green,
+								 color: currentColor ?? .blue,
 								 emoji: currentEmoji ?? "💩",
 								 schedule: setWithWeekDays)
 	

@@ -7,13 +7,8 @@
 
 import UIKit
 
-//protocol ICategoryCellDelegate: AnyObject {
-//	func categoryCellDidTap(_ cell: CategoryListCell)
-//}
-
 final class CategoryListCell: UITableViewCell {
 	static let identifier = "categoryCell"
-	//weak var delegate: ICategoryCellDelegate?
 	
 	private lazy var categoryNameLabel: UILabel = {
 		let label = UILabel()
@@ -66,10 +61,8 @@ final class CategoryListCell: UITableViewCell {
 		])
 	}
 	
-	//, delegate: ICategoryCellDelegate
 	func configCell(name: String, isSelectedCategory: Bool) {
 		self.categoryNameLabel.text = name
-		//self.delegate = delegate
 		self.checkMarkImageView.isHidden = !isSelectedCategory
 	}
 }
