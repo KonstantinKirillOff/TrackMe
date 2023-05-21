@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol ICategoryListViewControllerDelegate: AnyObject {
+	func categoryDidSelected(category: CategoryElementViewModel, vc: CategoryListViewController)
+}
+
 final class CategoryListViewController: UIViewController {
+	weak var delegate: ICategoryListViewControllerDelegate?
+	
 	private var viewModel: CategoryListViewModel!
 	
 	private lazy var headerLabel: UILabel = {
@@ -38,13 +44,14 @@ final class CategoryListViewController: UIViewController {
 		tableView.layer.masksToBounds = true
 		tableView.layer.cornerRadius = 16
 		tableView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-		tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.identifier)
+		tableView.register(CategoryListCell.self, forCellReuseIdentifier: CategoryListCell.identifier)
 		tableView.translatesAutoresizingMaskIntoConstraints = false
 		return tableView
 	}()
 	
 	private lazy var emptyStub: UIStackView = {
 		let image = UIImageView(image: UIImage(named: "EmptyTrackers") ?? UIImage())
+		
 		let titleLabel = UILabel()
 		titleLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
 		titleLabel.numberOfLines = 2
@@ -52,6 +59,8 @@ final class CategoryListViewController: UIViewController {
 		Привычки и события
 		можно объединить по смыслу
 		"""
+		titleLabel.textAlignment = .center
+		
 		let stackView = UIStackView()
 		stackView.axis = .vertical
 		stackView.alignment = .center
@@ -66,8 +75,8 @@ final class CategoryListViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupView()
-		setupTableView()
 		setupUIElements()
+		setupTableView()
 		setupStubEmpty()
 		checkEmptyCategories()
 	}
@@ -75,6 +84,10 @@ final class CategoryListViewController: UIViewController {
 	func initialise(viewModel: CategoryListViewModel) {
 		self.viewModel = viewModel
 		bind()
+	}
+	
+	func checkEmptyCategories() {
+		emptyStub.isHidden = !viewModel.categoryListIsEmpty()
 	}
 	
 	private func bind() {
@@ -114,8 +127,8 @@ final class CategoryListViewController: UIViewController {
 		NSLayoutConstraint.activate([
 			tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 			tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-			tableView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
-			tableView.heightAnchor.constraint(equalToConstant: CGFloat(viewModel.categories.count * 75))
+			tableView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 27),
+			tableView.bottomAnchor.constraint(equalTo: addCategoryButton.topAnchor, constant: -10)
 		])
 	}
 	
@@ -127,14 +140,39 @@ final class CategoryListViewController: UIViewController {
 		])
 	}
 	
-	func checkEmptyCategories() {
-		emptyStub.isHidden = viewModel.categoryListIsEmpty()
+	private func deleteCategory(indexPath: IndexPath) {
+		let alert = UIAlertController(title: nil,
+									  message: "Эта категория точно не нужна?",
+									  preferredStyle: .actionSheet)
+		let deleteAction = UIAlertAction(title: "Удалить",
+										 style: .destructive) { _ in
+			let category = self.viewModel.categories[indexPath.row]
+			try? self.viewModel.deleteCategory(by: category.id)
+			self.checkEmptyCategories()
+		}
+		
+		let closeAction = UIAlertAction(title: "Отменить",
+										style: .cancel)
+		
+		alert.addAction(deleteAction)
+		alert.addAction(closeAction)
+		present(alert, animated: true)
+	}
+	
+	private func changeCategory(indexPath: IndexPath) {
+		let category = viewModel.categories[indexPath.row]
+		
+		let changeCategoryVC = ChangeCategoryViewController()
+		changeCategoryVC.delegate = self
+		changeCategoryVC.initialise(category: category)
+		present(changeCategoryVC, animated: true)
 	}
 	
 	@objc private func addCategoryButtonPressed(_ sender: UIButton) {
 		let createCategoryVC = NewCategoryViewController()
 		let categoryModel = CategoryModel(categoryStore: TrackerCategoryStore())
 		let categoryVM = CategoryViewModel(for: categoryModel)
+		createCategoryVC.delegate = self
 		createCategoryVC.initialise(viewModel: categoryVM)
 	
 		present(createCategoryVC, animated: true)
@@ -158,6 +196,44 @@ extension CategoryListViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let category = viewModel.categories[indexPath.row]
 		viewModel.selectCategory(category: category)
-		//tableView.reloadRows(at: [indexPath], with: .automatic)
+		delegate?.categoryDidSelected(category: category, vc: self)
+	}
+	
+	func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		return UIContextMenuConfiguration(actionProvider: { actions in
+			return UIMenu(children: [
+				UIAction(title: "Редактировать", handler: { [weak self] _ in
+					self?.changeCategory(indexPath: indexPath)
+				}),
+				UIAction(title: "Удалить",attributes: .destructive, handler: { [weak self] _ in
+					self?.deleteCategory(indexPath: indexPath)
+				})
+			])
+		})
+	}
+}
+
+extension CategoryListViewController: INewCategoryViewControllerDelegate {
+	func newCategoryDidAdd(vc: NewCategoryViewController) {
+		vc.dismiss(animated: true) { [weak self] in
+			guard let self = self else { return }
+			self.tableView.reloadData()
+			self.checkEmptyCategories()
+		}
+	}
+}
+
+extension CategoryListViewController: IChangeCategoryViewControllerDelegate {
+	func categoryDidChange(category: CategoryElementViewModel, vc: ChangeCategoryViewController) {
+		vc.dismiss(animated: true) { [weak self] in
+			guard let self = self else { return }
+			do {
+				try self.viewModel.changeCategory(by: category.id, trackerCategory: category)
+				self.tableView.reloadData()
+			} catch {
+				//TODO: show alert
+				print("Category: \(category.name) don't changed!")
+			}
+		}
 	}
 }

@@ -29,6 +29,22 @@ final class CategoryListViewModel {
 		categoryStore.categoryListIsEmpty()
 	}
 	
+	func deleteCategory(by id: String) throws {
+		do {
+			try categoryStore.deleteCategory(by: id)
+		} catch {
+			throw StoreErrors.deleteElementError
+		}
+	}
+	
+	func changeCategory(by id: String, trackerCategory: CategoryElementViewModel) throws {
+		do {
+			try categoryStore.changeCategory(by: id, trackerCategory: trackerCategory)
+		} catch {
+			throw StoreErrors.changeElementError
+		}
+	}
+	
 	private func getCategoriesFromStore() -> [CategoryElementViewModel] {
 		return categoryStore.categories.map {
 			let uuidString = $0.categoryID!

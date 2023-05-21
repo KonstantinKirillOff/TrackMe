@@ -15,6 +15,7 @@ enum StoreErrors: Error {
 	case readElementFromDBError(Error)
 	case saveContextError
 	case changeElementError
+	case deleteElementError
 }
 
 struct TrackerStoreUpdate {
@@ -41,6 +42,7 @@ protocol IDataProviderProtocol {
 	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
 	func deleteRecord(date: Date, trackerID: String)
 	
+	func addNewCategory(_ trackerCategory: TrackerCategory) throws
 	func fetchCategory(by id: String) -> TrackerCategoryCoreData?
 	
 	func fetchResultControllerIsEmpty() -> Bool
@@ -107,6 +109,14 @@ extension DataProvider: IDataProviderProtocol {
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws {
 		do {
 			try trackerStore.addNewTracker(record, in: category)
+		} catch {
+			throw StoreErrors.addElementToDBError(error)
+		}
+	}
+	
+	func addNewCategory(_ trackerCategory: TrackerCategory) throws {
+		do {
+			try trackerCategoryStore.addNewCategory(trackerCategory)
 		} catch {
 			throw StoreErrors.addElementToDBError(error)
 		}

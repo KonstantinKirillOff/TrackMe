@@ -8,7 +8,7 @@
 import UIKit
 
 protocol INewTrackerViewControllerDelegate: AnyObject {
-	func newTrackerDidAdd(tracker: Tracker, categoryName: String, vc: NewTrackerViewController)
+	func newTrackerDidAdd(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: NewTrackerViewController)
 }
 
 final class NewTrackerViewController: UIViewController {
@@ -24,7 +24,7 @@ final class NewTrackerViewController: UIViewController {
 	private var headerForView = ""
 	
 	private var weekSchedule: [String : WeekDay] = [:]
-	private var categoryName = "Категория по умолчанию"
+	private var selectedCategory: CategoryElementViewModel?
 	
 	weak var delegate: INewTrackerViewControllerDelegate?
 	
@@ -136,6 +136,12 @@ final class NewTrackerViewController: UIViewController {
 		setupTableView()
 		setupEmojiCollectionView()
 		setupColorCollectionView()
+	}
+	
+	func configViewController(header: String, trackerTypes: [String], delegate: INewTrackerViewControllerDelegate) {
+		self.trackerTypes = trackerTypes
+		self.headerForView = header
+		self.delegate = delegate
 	}
 	
 	private func setupUIElements() {
@@ -269,6 +275,12 @@ final class NewTrackerViewController: UIViewController {
 	}
 	
 	@objc private func addButtonTapped() {
+		guard let category = selectedCategory else {
+			assertionFailure("category not set!")
+			//TODO: show alert
+			return
+		}
+		
 		var trackName = "No name tracker"
 		if let text = nameTrackerTextField.text, !text.isEmpty {
 			trackName = text
@@ -282,14 +294,8 @@ final class NewTrackerViewController: UIViewController {
 								 emoji: currentEmoji ?? "💩",
 								 schedule: setWithWeekDays)
 	
-		delegate?.newTrackerDidAdd(tracker: newTracker, categoryName: categoryName, vc: self)
+		delegate?.newTrackerDidAdd(tracker: newTracker, selectedCategory: category, vc: self)
 		dismiss(animated: true)
-	}
-	
-	func configViewController(header: String, trackerTypes: [String], delegate: INewTrackerViewControllerDelegate) {
-		self.trackerTypes = trackerTypes
-		self.headerForView = header
-		self.delegate = delegate
 	}
 }
 
@@ -308,7 +314,7 @@ extension NewTrackerViewController: UITableViewDataSource {
 		
 		//category
 		if indexPath.row == 0 {
-			cell.detailTextLabel?.text = categoryName
+			cell.detailTextLabel?.text = selectedCategory?.name
 		} else { //weekSchedule
 			let weekSchedule = getScheduleInString()
 			cell.detailTextLabel?.text = weekSchedule
@@ -330,6 +336,7 @@ extension NewTrackerViewController: UITableViewDelegate {
 		} else {
 			let categoryListVM = CategoryListViewModel(categoryStore: TrackerCategoryStore())
 			let categoryListVC = CategoryListViewController()
+			categoryListVC.delegate = self
 			categoryListVC.initialise(viewModel: categoryListVM)
 			present(categoryListVC, animated: true)
 		}
@@ -340,6 +347,16 @@ extension NewTrackerViewController: IScheduleControllerDelegate {
 	func getScheduleForTracker(weekDays: Set<WeekDay>) {
 		weekDays.forEach { weekSchedule[$0.getNumberDay()] = $0 }
 		tableView.reloadData()
+	}
+}
+
+extension NewTrackerViewController: ICategoryListViewControllerDelegate {
+	func categoryDidSelected(category: CategoryElementViewModel, vc: CategoryListViewController) {
+		vc.dismiss(animated: true) { [weak self] in
+			guard let self = self else { return }
+			self.selectedCategory = category
+			tableView.reloadData()
+		}
 	}
 }
 

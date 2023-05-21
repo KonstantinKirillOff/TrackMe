@@ -23,7 +23,7 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 	
 	private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData> = {
 
-		let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCoreData")
+		let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
 		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.name, ascending: true)]
 		
 		let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
@@ -50,7 +50,7 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 		try context.save()
 	}
 	
-	func deleteCategory(by id: String) {
+	func deleteCategory(by id: String) throws {
 		let request = TrackerCategoryCoreData.fetchRequest()
 		request.returnsObjectsAsFaults = false
 		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.categoryID), id)
@@ -59,6 +59,7 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 		categoriesForDeleting.forEach { category in
 			context.delete(category)
 		}
+		try context.save()
 	}
 	
 	func fetchCategory(by id: String) -> TrackerCategoryCoreData? {
@@ -71,14 +72,14 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 		return categories.first
 	}
 	
-	func changeCategory(by id: String, trackerCategory: TrackerCategory) throws {
+	func changeCategory(by id: String, trackerCategory: CategoryElementViewModel) throws {
 		let request = TrackerCategoryCoreData.fetchRequest()
 		request.returnsObjectsAsFaults = false
 		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.categoryID), id)
 		
 		guard let categories = try? context.fetch(request) else { return }
 		if let categoryForChange = categories.first {
-			categoryForChange.categoryID = trackerCategory.id.uuidString
+			categoryForChange.categoryID = trackerCategory.id
 			categoryForChange.name = trackerCategory.name
 			try context.save()
 		}
