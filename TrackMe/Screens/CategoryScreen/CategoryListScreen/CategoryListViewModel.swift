@@ -46,9 +46,9 @@ final class CategoryListViewModel {
 	}
 	
 	private func getCategoriesFromStore() -> [CategoryElementViewModel] {
-		return categoryStore.categories.map {
-			let uuidString = $0.categoryID!
-			let name = $0.name!
+		return categoryStore.categories.compactMap {
+			guard let uuidString = $0.categoryID,
+				  let name = $0.name else { return nil }
 			
 			return CategoryElementViewModel(id: uuidString,
 											name: name,

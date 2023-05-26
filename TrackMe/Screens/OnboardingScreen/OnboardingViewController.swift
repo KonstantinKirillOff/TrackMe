@@ -66,9 +66,16 @@ final class OnboardingViewController: UIPageViewController {
 	
 	@objc
 	private func finishButtonTapped() {
+		switchToTapBarController()
+	}
+	
+	private func switchToTapBarController() {
+		guard let window = UIApplication.shared.windows.first else {
+			assertionFailure("Invalid configuration")
+			return
+		}
 		let tabBarVC = TabBarViewController()
-		tabBarVC.modalPresentationStyle = .fullScreen
-		present(tabBarVC, animated: true)
+		window.rootViewController = tabBarVC
 	}
 }
 
