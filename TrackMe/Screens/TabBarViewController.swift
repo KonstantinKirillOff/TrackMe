@@ -8,7 +8,6 @@
 import UIKit
 
 final class TabBarViewController: UITabBarController {
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -24,6 +23,5 @@ final class TabBarViewController: UITabBarController {
 		
 		self.viewControllers = [trackersVC, statisticsVC]
 	}
-
 }
 

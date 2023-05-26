@@ -8,7 +8,6 @@
 import UIKit
 
 final class StatisticsViewController: UIViewController {
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -16,5 +15,4 @@ final class StatisticsViewController: UIViewController {
 		navigationController?.navigationBar.prefersLargeTitles = true
 		view.backgroundColor = UIColor.ypWhite
 	}
-	
 }

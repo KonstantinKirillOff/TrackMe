@@ -23,7 +23,7 @@ final class TrackerStore: NSObject, ITrackerStoreProtocol {
 		self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 	}
 	
-	func add(_ tracker: Tracker, in category: TrackerCategoryCoreData) throws {
+	func addNewTracker(_ tracker: Tracker, in category: TrackerCategoryCoreData) throws {
 		let trackerCoreData = TrackerCoreData(context: context)
 		trackerCoreData.trackerID = tracker.id.uuidString
 		trackerCoreData.name = tracker.name

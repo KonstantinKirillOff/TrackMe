@@ -8,7 +8,6 @@
 import UIKit
 
 final class TrackersViewController: UIViewController {
-	
 	private var dataProvider: IDataProviderProtocol!
 	private var currentDate: Date!
 	
@@ -266,33 +265,23 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension TrackersViewController: IChooseTrackerViewControllerDelegate {
-	func newTrackerDidAdd(tracker: Tracker, categoryName: String, vc: ChooseTrackerViewController) {
+	func newTrackerDidAdd(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: ChooseTrackerViewController) {
 		vc.dismiss(animated: true) { [weak self] in
 			guard let self = self else { return }
 			
 			//get/add category
-			var category: TrackerCategoryCoreData?
-			if let existingCategory = self.dataProvider.fetchCategory(by: categoryName) {
-				category = existingCategory
-			} else {
-				do {
-					let newCategory = try self.dataProvider.addCategory(TrackerCategory(name: categoryName, trackers: []))
-					category = newCategory
-				} catch {
-					//TODO: show alert
-					print(error.localizedDescription)
-				}
+			guard let category = self.dataProvider.fetchCategory(by: selectedCategory.id) else {
+				return
 			}
-			
+
 			//add tracker
-			guard let category = category else { return }
 			do {
 				try self.dataProvider.addTracker(tracker, category: category)
 			} catch {
 				//TODO: show alert
 				print(error.localizedDescription)
 			}
-			
+
 			//make filters
 			let searchBarText = self.searchController.searchBar.text ?? ""
 			do {
@@ -309,10 +298,6 @@ extension TrackersViewController: IChooseTrackerViewControllerDelegate {
 
 extension TrackersViewController: IDataProviderDelegate {
 	func trackersStoreDidUpdate() {
-		//				collectionView.performBatchUpdates {
-		//					collectionView.insertItems(at: [IndexPath(row: update.insertedRow, section: update.insertedSection)])
-		//				}
-		//- тут не получилось с обновлением по индексу, не смог победить, нужно больше времени на разборы.
 		collectionView.reloadData()
 	}
 }

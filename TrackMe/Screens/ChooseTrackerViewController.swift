@@ -8,7 +8,7 @@
 import UIKit
 
 protocol IChooseTrackerViewControllerDelegate: AnyObject {
-	func newTrackerDidAdd(tracker: Tracker, categoryName: String, vc: ChooseTrackerViewController)
+	func newTrackerDidAdd(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: ChooseTrackerViewController)
 }
 
 final class ChooseTrackerViewController: UIViewController {
@@ -101,10 +101,10 @@ final class ChooseTrackerViewController: UIViewController {
 }
 
 extension ChooseTrackerViewController: INewTrackerViewControllerDelegate {
-	func newTrackerDidAdd(tracker: Tracker, categoryName: String, vc: NewTrackerViewController) {
+	func newTrackerDidAdd(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: NewTrackerViewController) {
 		vc.dismiss(animated: true) { [weak self] in
 			guard let self = self else { return }
-			self.delegate?.newTrackerDidAdd(tracker: tracker, categoryName: categoryName , vc: self)
+			self.delegate?.newTrackerDidAdd(tracker: tracker, selectedCategory: selectedCategory, vc: self)
 		}
 	}
 }

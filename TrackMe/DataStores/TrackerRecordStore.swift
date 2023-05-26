@@ -15,7 +15,7 @@ final class TrackerRecordStore: NSObject, ITrackerRecordStoreProtocol {
 		self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 	}
 	
-	func add(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws {
+	func addNewRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws {
 		let trackerRecordCoreData = TrackerRecordCoreData(context: context)
 		trackerRecordCoreData.date = trackerRecord.date
 		trackerRecordCoreData.tracker = tracker

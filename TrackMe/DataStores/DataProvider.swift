@@ -14,15 +14,11 @@ enum StoreErrors: Error {
 	case addElementToDBError(Error)
 	case readElementFromDBError(Error)
 	case saveContextError
-}
-
-struct TrackerStoreUpdate {
-	let insertedRow: Int
-	let insertedSection: Int
+	case changeElementError
+	case deleteElementError
 }
 
 protocol IDataProviderDelegate: AnyObject {
-	//func trackersStoreDidUpdate(_ update: TrackerStoreUpdate) - в следующем спринте буду разбираться с обновлением по индексу
 	func trackersStoreDidUpdate()
 }
 
@@ -32,19 +28,18 @@ protocol IDataProviderProtocol {
 	func nameOfSection(_ section: Int) -> String
 	
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws
-	func addCategory(_ category: TrackerCategory) throws -> TrackerCategoryCoreData
-	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
-	func deleteRecord(date: Date, trackerID: String)
-	
 	func getTrackerCoreData(at indexPath: IndexPath) -> TrackerCoreData
 	func getTrackerObject(at: IndexPath) -> Tracker?
 	
-	func fetchCategory(by name: String) -> TrackerCategoryCoreData?
-	func fetchResultControllerIsEmpty() -> Bool
-	
 	func countRecordForTracker(trackerID: String) -> Int
 	func trackerTrackedToday(date: Date, trackerID: String) -> Bool
+	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
+	func deleteRecord(date: Date, trackerID: String)
 	
+	func addNewCategory(_ trackerCategory: TrackerCategory) throws
+	func fetchCategory(by id: String) -> TrackerCategoryCoreData?
+	
+	func fetchResultControllerIsEmpty() -> Bool
 	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date) throws
 }
 
@@ -56,12 +51,11 @@ final class DataProvider: NSObject {
 	private let trackerStore: ITrackerStoreProtocol
 	private let trackerCategoryStore: ITrackerCategoryStoreProtocol
 	private let trackerRecordStore: ITrackerRecordStoreProtocol
-	private var insertedIndexes: TrackerStoreUpdate?
 	
 	private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
 
 		let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCoreData.category, ascending: true)]
+		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCoreData.category?.name, ascending: true)]
 		
 		let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
 																  managedObjectContext: context,
@@ -107,23 +101,22 @@ extension DataProvider: IDataProviderProtocol {
 
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws {
 		do {
-			try trackerStore.add(record, in: category)
+			try trackerStore.addNewTracker(record, in: category)
 		} catch {
 			throw StoreErrors.addElementToDBError(error)
 		}
 	}
 	
-	func addCategory(_ category: TrackerCategory) throws -> TrackerCategoryCoreData {
+	func addNewCategory(_ trackerCategory: TrackerCategory) throws {
 		do {
-			let newCategory = try trackerCategoryStore.add(category)
-			return newCategory
+			try trackerCategoryStore.addNewCategory(trackerCategory)
 		} catch {
 			throw StoreErrors.addElementToDBError(error)
 		}
 	}
 	
-	func fetchCategory(by name: String) -> TrackerCategoryCoreData? {
-		trackerCategoryStore.fetchCategory(by: name)
+	func fetchCategory(by id: String) -> TrackerCategoryCoreData? {
+		trackerCategoryStore.fetchCategory(by: id)
 	}
 	
 	func fetchResultControllerIsEmpty() -> Bool {
@@ -160,7 +153,7 @@ extension DataProvider: IDataProviderProtocol {
 	
 	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws {
 		do {
-			try trackerRecordStore.add(trackerRecord, for: tracker)
+			try trackerRecordStore.addNewRecord(trackerRecord, for: tracker)
 		} catch {
 			throw StoreErrors.addElementToDBError(error)
 		}
@@ -173,25 +166,7 @@ extension DataProvider: IDataProviderProtocol {
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension DataProvider: NSFetchedResultsControllerDelegate {
-	//	func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-	//		insertedIndexes = TrackerStoreUpdate(insertedRow: 0, insertedSection: 0)
-	//	} - буду дальше разбираться в следующем спринте
-
 	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//		delegate?.trackersStoreDidUpdate(insertedIndexes!) - буду дальше разбираться в следующем спринте
-//		insertedIndexes = nil
 		delegate?.trackersStoreDidUpdate()
-	}
-	
-	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-		
-//		switch type {
-//		case .insert:
-//			if let indexPath = newIndexPath {
-//				insertedIndexes = TrackerStoreUpdate(insertedRow: indexPath.row, insertedSection: indexPath.section)
-//			}
-//		default:
-//			break
-//		} - буду дальше разбираться в следующем спринте
 	}
 }
