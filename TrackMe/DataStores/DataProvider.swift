@@ -35,9 +35,12 @@ protocol IDataProviderProtocol {
 	func trackerTrackedToday(date: Date, trackerID: String) -> Bool
 	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
 	func deleteRecord(date: Date, trackerID: String)
+	func deleteAllTrackers() throws
 	
 	func addNewCategory(_ trackerCategory: TrackerCategory) throws
 	func fetchCategory(by id: String) -> TrackerCategoryCoreData?
+	func deleteAllCategories() throws
+	
 	
 	func fetchResultControllerIsEmpty() -> Bool
 	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date) throws
@@ -107,11 +110,36 @@ extension DataProvider: IDataProviderProtocol {
 		}
 	}
 	
+	func deleteAllTrackers() throws {
+		do {
+			try trackerStore.deleteAllTrackers()
+		} catch {
+			throw StoreErrors.deleteElementError
+		}
+	}
+	
+//	func changeTracker(by id: String, tracker: Tracker) throws {
+//		guard let category = fetchCategory(by: tracker.) else {
+//			return
+//		}
+//		trackerStore.changeTracker(by: id,
+//								   tracker: tracker,
+//								   category: category)
+//	}
+	
 	func addNewCategory(_ trackerCategory: TrackerCategory) throws {
 		do {
 			try trackerCategoryStore.addNewCategory(trackerCategory)
 		} catch {
 			throw StoreErrors.addElementToDBError(error)
+		}
+	}
+	
+	func deleteAllCategories() throws {
+		do {
+			try trackerCategoryStore.deleteAllCategories()
+		} catch {
+			throw StoreErrors.deleteElementError
 		}
 	}
 	

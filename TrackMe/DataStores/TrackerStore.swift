@@ -34,6 +34,56 @@ final class TrackerStore: NSObject, ITrackerStoreProtocol {
 		try context.save()
 	}
 	
+	func deleteTracker(by id: String) throws {
+		let request = TrackerCoreData.fetchRequest()
+		request.returnsObjectsAsFaults = false
+		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), id)
+	
+		guard let trackersForDeleting = try? context.fetch(request) else { return }
+		trackersForDeleting.forEach { tracker in
+			context.delete(tracker)
+		}
+		try context.save()
+	}
+	
+	func deleteAllTrackers() throws {
+		let request = TrackerCoreData.fetchRequest()
+		request.returnsObjectsAsFaults = false
+	
+		guard let trackersForDeleting = try? context.fetch(request) else { return }
+		trackersForDeleting.forEach { tracker in
+			context.delete(tracker)
+		}
+		try context.save()
+	}
+	
+	func fetchTracker(by id: String) -> TrackerCoreData? {
+		let request = TrackerCoreData.fetchRequest()
+		request.fetchLimit = 1
+		request.returnsObjectsAsFaults = false
+		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), id)
+		
+		guard let trackers = try? context.fetch(request) else { return nil }
+		return trackers.first
+	}
+	
+	func changeTracker(by id: String, tracker: Tracker, category: TrackerCategoryCoreData) throws {
+		let request = TrackerCoreData.fetchRequest()
+		request.returnsObjectsAsFaults = false
+		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), id)
+		
+		guard let trackers = try? context.fetch(request) else { return }
+		if let trackerForChange = trackers.first {
+			trackerForChange.trackerID = tracker.id.uuidString
+			trackerForChange.name = tracker.name
+			trackerForChange.emoji = tracker.emoji
+			trackerForChange.hexColor = tracker.color.toHexString
+			trackerForChange.schedule = Array(tracker.schedule).joined(separator: ",")
+			trackerForChange.category = category
+			try context.save()
+		}
+	}
+	
 	func tracker(from trackerCoreData: TrackerCoreData) throws -> Tracker {
 		guard let emojies = trackerCoreData.emoji else {
 			throw TrackerStoreError.decodingErrorInvalidEmoji

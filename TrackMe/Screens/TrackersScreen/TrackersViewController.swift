@@ -62,10 +62,6 @@ final class TrackersViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		currentDate = Date()
-		dataProvider = DataProvider(TrackerStore(),
-									TrackerCategoryStore(),
-									TrackerRecordStore(),
-									delegate: self)
 		
 		setupView()
 		setupCollectionView()
@@ -79,6 +75,10 @@ final class TrackersViewController: UIViewController {
 			print(error.localizedDescription)
 		}
 		checkEmptyTrackers()
+	}
+	
+	func initialize(dataProvider: IDataProviderProtocol) {
+		self.dataProvider = dataProvider
 	}
 	
 	private func setupView() {

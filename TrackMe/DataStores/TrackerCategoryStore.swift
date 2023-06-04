@@ -62,6 +62,17 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 		try context.save()
 	}
 	
+	func deleteAllCategories() throws {
+		let request = TrackerCategoryCoreData.fetchRequest()
+		request.returnsObjectsAsFaults = false
+	
+		guard let categoriesForDeleting = try? context.fetch(request) else { return }
+		categoriesForDeleting.forEach { category in
+			context.delete(category)
+		}
+		try context.save()
+	}
+	
 	func fetchCategory(by id: String) -> TrackerCategoryCoreData? {
 		let request = TrackerCategoryCoreData.fetchRequest()
 		request.fetchLimit = 1
