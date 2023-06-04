@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		43002E252A2D1ABF006FCDB1 /* TrackMeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43002E242A2D1ABF006FCDB1 /* TrackMeTests.swift */; };
 		43002E2D2A2D1AF2006FCDB1 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 43002E2C2A2D1AF2006FCDB1 /* SnapshotTesting */; };
+		43002E2F2A2D23E4006FCDB1 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43002E2E2A2D23E4006FCDB1 /* Colors.swift */; };
 		431564B429D33A3800A1DC3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431564B329D33A3800A1DC3A /* AppDelegate.swift */; };
 		431564B629D33A3800A1DC3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431564B529D33A3800A1DC3A /* SceneDelegate.swift */; };
 		431564B829D33A3800A1DC3A /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431564B729D33A3800A1DC3A /* TabBarViewController.swift */; };
@@ -64,6 +65,7 @@
 /* Begin PBXFileReference section */
 		43002E222A2D1ABF006FCDB1 /* TrackMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		43002E242A2D1ABF006FCDB1 /* TrackMeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackMeTests.swift; sourceTree = "<group>"; };
+		43002E2E2A2D23E4006FCDB1 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		431564B029D33A3800A1DC3A /* TrackMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		431564B329D33A3800A1DC3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		431564B529D33A3800A1DC3A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 			children = (
 				433E3C4329F4158100067202 /* WeekDays.swift */,
 				43E990C629FD778A0093C9CB /* UIColor+Extension.swift */,
+				43002E2E2A2D23E4006FCDB1 /* Colors.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -487,6 +490,7 @@
 				438AD7EF29FFAED700730601 /* DataProvider.swift in Sources */,
 				438AD7EB29FEFF3D00730601 /* TrackerRecordStore.swift in Sources */,
 				438AD7E929FEFF2B00730601 /* TrackerCategoryStore.swift in Sources */,
+				43002E2F2A2D23E4006FCDB1 /* Colors.swift in Sources */,
 				43E990C929FD7FA30093C9CB /* EmojiCell.swift in Sources */,
 				4352D9552A167F000024FFEE /* CategoryModel.swift in Sources */,
 				432447F429EC20FD00649596 /* HeaderView.swift in Sources */,

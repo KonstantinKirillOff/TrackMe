@@ -25,7 +25,7 @@ final class ScheduleCell: UITableViewCell {
 		let switcher = UISwitch()
 		switcher.isOn = false
 		switcher.addTarget(self, action: #selector(switchedDidChange), for: .valueChanged)
-		switcher.onTintColor = UIColor.ypBlue
+		switcher.onTintColor = Colors.ypBlue
 		return switcher
 	}()
 

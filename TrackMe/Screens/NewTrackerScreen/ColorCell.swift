@@ -18,7 +18,7 @@ final class ColorCell: UICollectionViewCell {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		contentView.layer.cornerRadius = 8
-		contentView.backgroundColor = UIColor.ypWhite
+		contentView.backgroundColor = Colors.ypWhite
 		
 		setupColorView()
 	}

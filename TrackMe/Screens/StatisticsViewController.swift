@@ -13,6 +13,6 @@ final class StatisticsViewController: UIViewController {
 		
 		title = "Стастистика"
 		navigationController?.navigationBar.prefersLargeTitles = true
-		view.backgroundColor = UIColor.ypWhite
+		view.backgroundColor = Colors.backgroundColor
 	}
 }

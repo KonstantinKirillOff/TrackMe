@@ -82,7 +82,7 @@ final class TrackersViewController: UIViewController {
 	}
 	
 	private func setupView() {
-		view.backgroundColor = UIColor.ypWhite
+		view.backgroundColor = Colors.backgroundColor
 		
 		if let navBar = navigationController?.navigationBar {
 			title = "Трэкеры"

@@ -8,16 +8,6 @@
 import UIKit
 
 extension UIColor {
-	static let ypBackground = UIColor(named: "YPBackground")
-	static let ypGray = UIColor(named: "YPGray")
-	static let ypBlue = UIColor(named: "YPBlue")
-	static let ypBlack = UIColor(named: "YPBlack")
-	static let ypRed = UIColor(named: "YPRed")
-	static let ypWhite = UIColor(named: "YPWhite")
-	static let ypLightGray = UIColor(named: "YPLightGray")
-}
-
-extension UIColor {
 	var toHexString: String {
 		let components = self.cgColor.components
 		let r: CGFloat = components?[0] ?? 0.0

@@ -29,8 +29,8 @@ final class CategoryListViewController: UIViewController {
 	private lazy var addCategoryButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Добавить категорию", for: .normal)
-		button.backgroundColor = UIColor.ypBlack
-		button.tintColor = UIColor.ypWhite
+		button.backgroundColor = Colors.ypBlack
+		button.setTitleColor(Colors.ypWhite, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(addCategoryButtonPressed), for: .touchUpInside)
@@ -102,7 +102,7 @@ final class CategoryListViewController: UIViewController {
 	}
 	
 	private func setupView() {
-		view.backgroundColor = UIColor.ypWhite
+		view.backgroundColor = Colors.backgroundColor
 	}
 	
 	private func setupUIElements() {

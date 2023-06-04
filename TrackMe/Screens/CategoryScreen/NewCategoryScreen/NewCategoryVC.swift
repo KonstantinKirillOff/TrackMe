@@ -38,8 +38,8 @@ final class NewCategoryViewController: UIViewController {
 	private lazy var addCategoryButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Готово", for: .normal)
-		button.backgroundColor = UIColor.ypBlack
-		button.tintColor = UIColor.ypWhite
+		button.backgroundColor = Colors.ypBlack
+		button.setTitleColor(Colors.ypWhite, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(addCategoryButtonPressed), for: .touchUpInside)
@@ -49,13 +49,14 @@ final class NewCategoryViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		view.backgroundColor = Colors.backgroundColor
 		setupView()
 		setupUIElements()
 		setupAccessForElements()
 	}
 	
 	private func setupView() {
-		view.backgroundColor = UIColor.ypWhite
+		view.backgroundColor = Colors.ypWhite
 	}
 	
 	private func setupUIElements() {
@@ -107,7 +108,7 @@ final class NewCategoryViewController: UIViewController {
 	
 	private func setButtonAvailability(isBlocked: Bool) {
 		addCategoryButton.isUserInteractionEnabled = !isBlocked
-		addCategoryButton.backgroundColor = !isBlocked ? UIColor.ypBlack : UIColor.ypLightGray
+		addCategoryButton.backgroundColor = !isBlocked ? Colors.ypBlack : Colors.ypLightGray
 	}
 	
 	@objc

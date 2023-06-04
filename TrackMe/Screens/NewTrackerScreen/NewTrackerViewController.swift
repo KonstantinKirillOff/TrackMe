@@ -85,9 +85,9 @@ final class NewTrackerViewController: UIViewController {
 		button.setTitle("Отменить", for: .normal)
 		button.layer.cornerRadius = 16
 		button.layer.borderWidth = 1
-		button.layer.borderColor = UIColor.ypRed?.cgColor
-		button.backgroundColor = UIColor.ypWhite
-		button.setTitleColor(UIColor.ypRed, for: .normal)
+		button.layer.borderColor = Colors.ypRed?.cgColor
+		button.backgroundColor = Colors.ypWhite
+		button.setTitleColor(Colors.ypRed, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
 		return button
@@ -96,8 +96,8 @@ final class NewTrackerViewController: UIViewController {
 	private lazy var addButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Создать", for: .normal)
-		button.backgroundColor = UIColor.ypBlack
-		button.setTitleColor(UIColor.ypWhite, for: .normal)
+		button.backgroundColor = Colors.ypBlack
+		button.setTitleColor(Colors.ypWhite, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
@@ -128,7 +128,7 @@ final class NewTrackerViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = UIColor.ypWhite
+		view.backgroundColor = Colors.backgroundColor
 		
 		setupUIElements()
 		setUpScrollView()
@@ -309,7 +309,7 @@ extension NewTrackerViewController: UITableViewDataSource {
 
 		cell.textLabel?.text = trackerTypes[indexPath.row]
 		
-		cell.detailTextLabel?.textColor = UIColor.ypGray
+		cell.detailTextLabel?.textColor = Colors.ypGray
 		cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 17)
 		
 		//category
@@ -322,7 +322,7 @@ extension NewTrackerViewController: UITableViewDataSource {
 		
 		cell.selectionStyle = .none
 		cell.accessoryType = .disclosureIndicator
-		cell.backgroundColor = UIColor.ypBackground
+		cell.backgroundColor = Colors.ypBackground
 		return cell
 	}
 }

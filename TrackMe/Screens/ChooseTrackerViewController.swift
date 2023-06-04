@@ -25,8 +25,8 @@ final class ChooseTrackerViewController: UIViewController {
 	private lazy var habitButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Привычка", for: .normal)
-		button.backgroundColor = UIColor.ypBlack
-		button.tintColor = UIColor.ypWhite
+		button.backgroundColor = Colors.ypBlack
+		button.setTitleColor(Colors.ypWhite, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(habitButtonPressed), for: .touchUpInside)
@@ -36,8 +36,8 @@ final class ChooseTrackerViewController: UIViewController {
 	private lazy var unregularActivityButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Нерегулярное событие", for: .normal)
-		button.backgroundColor = UIColor.ypBlack
-		button.tintColor = UIColor.ypWhite
+		button.backgroundColor = Colors.ypBlack
+		button.setTitleColor(Colors.ypWhite, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(unregularActivityButtonPressed), for: .touchUpInside)
@@ -62,7 +62,7 @@ final class ChooseTrackerViewController: UIViewController {
 	}
 	
 	private func setupView() {
-		view.backgroundColor = UIColor.ypWhite
+		view.backgroundColor = Colors.backgroundColor
 	}
 	
 	private func setupUIElements() {

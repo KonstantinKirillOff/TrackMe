@@ -28,7 +28,7 @@ final class CardTrackerCell: UICollectionViewCell {
 	private lazy var titleLabel: UILabel = {
 		let titleLabel = UILabel()
 		titleLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-		titleLabel.textColor = UIColor.ypWhite
+		titleLabel.textColor = Colors.ypWhite
 		titleLabel.numberOfLines = 2
 		return titleLabel
 	}()
@@ -52,7 +52,7 @@ final class CardTrackerCell: UICollectionViewCell {
 	
 	private lazy var addQuantityButton: UIButton = {
 		let addButton = UIButton()
-		addButton.tintColor = UIColor.ypWhite
+		addButton.tintColor = Colors.ypWhite
 		addButton.layer.cornerRadius = 17
 		return addButton
 	}()
@@ -60,7 +60,7 @@ final class CardTrackerCell: UICollectionViewCell {
 	private lazy var quantityLabel: UILabel = {
 		let quantityLabel = UILabel()
 		quantityLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-		quantityLabel.textColor = UIColor.ypBlack
+		quantityLabel.textColor = Colors.ypBlack
 		quantityLabel.textAlignment = .left
 		return quantityLabel
 	}()
@@ -100,7 +100,7 @@ final class CardTrackerCell: UICollectionViewCell {
 		cardView.addSubview(emojiView)
 		emojiView.addSubview(emojiLabel)
 		emojiView.layer.cornerRadius = 12
-		emojiView.backgroundColor = UIColor.ypWhite?.withAlphaComponent(0.3)
+		emojiView.backgroundColor = Colors.ypWhite?.withAlphaComponent(0.3)
 		
 		emojiView.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([

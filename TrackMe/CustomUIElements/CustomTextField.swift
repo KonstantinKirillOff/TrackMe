@@ -29,7 +29,7 @@ final class BaseTextField: UITextField {
 		clearButtonMode = UITextField.ViewMode.whileEditing
 		
 		font = UIFont.systemFont(ofSize: 17)
-		backgroundColor = UIColor.ypBackground
+		backgroundColor = Colors.ypBackground
 		layer.cornerRadius = 16
 	}
 	

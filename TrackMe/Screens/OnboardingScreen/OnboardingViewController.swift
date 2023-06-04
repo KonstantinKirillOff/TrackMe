@@ -19,8 +19,8 @@ final class OnboardingViewController: UIPageViewController {
 		pageControl.numberOfPages = pages.count
 		pageControl.currentPage = 0
 		
-		pageControl.currentPageIndicatorTintColor = UIColor.ypBlack
-		pageControl.pageIndicatorTintColor = UIColor.ypGray
+		pageControl.currentPageIndicatorTintColor = Colors.ypBlack
+		pageControl.pageIndicatorTintColor = Colors.ypGray
 		
 		pageControl.translatesAutoresizingMaskIntoConstraints = false
 		return pageControl
@@ -29,8 +29,8 @@ final class OnboardingViewController: UIPageViewController {
 	lazy var onboardingFinishButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Вот это технологии!", for: .normal)
-		button.backgroundColor = UIColor.ypBlack
-		button.setTitleColor(UIColor.ypWhite, for: .normal)
+		button.backgroundColor = UIColor.black
+		button.setTitleColor(UIColor.white, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(finishButtonTapped), for: .touchUpInside)

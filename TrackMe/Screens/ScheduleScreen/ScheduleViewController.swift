@@ -38,8 +38,8 @@ final class ScheduleViewController: UIViewController, UITableViewDelegate {
 	private lazy var addButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Готово", for: .normal)
-		button.backgroundColor = UIColor.ypBlack
-		button.tintColor = UIColor.ypWhite
+		button.backgroundColor = Colors.ypBlack
+		button.setTitleColor(Colors.ypWhite, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
 		button.layer.cornerRadius = 16
 		button.addTarget(self, action: #selector(getScheduleFinished), for: .touchUpInside)
@@ -48,7 +48,7 @@ final class ScheduleViewController: UIViewController, UITableViewDelegate {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = UIColor.ypWhite
+		view.backgroundColor = Colors.backgroundColor
 		
 		setupUIElements()
 		setupCollectionView()
@@ -105,7 +105,7 @@ extension ScheduleViewController: UITableViewDataSource {
 		let cell = tableView.dequeueReusableCell(withIdentifier: ScheduleCell.identifier, for: indexPath) as! ScheduleCell
 		
 		let day = WeekDay.allCases[indexPath.row]
-		cell.backgroundColor = UIColor.ypBackground
+		cell.backgroundColor = Colors.ypBackground
 		cell.selectionStyle = .none
 		cell.configCell(name: day.getDayOnRussian(), delegate: self, switchedOn: daysForSchedule.contains(day))
 		return cell

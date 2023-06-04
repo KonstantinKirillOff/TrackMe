@@ -46,7 +46,7 @@ final class CategoryListCell: UITableViewCell {
 	
 	private func setupView() {
 		contentView.layer.cornerRadius = 16
-		contentView.backgroundColor = UIColor.ypBackground
+		contentView.backgroundColor = Colors.ypBackground
 		selectionStyle = .none
 	}
 	

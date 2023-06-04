@@ -26,7 +26,7 @@ final class EmojiCell: UICollectionViewCell {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		contentView.layer.cornerRadius = 16
-		contentView.backgroundColor = UIColor.ypWhite
+		contentView.backgroundColor = Colors.ypWhite
 		
 		setupEmojiView()
 	}
@@ -54,9 +54,9 @@ final class EmojiCell: UICollectionViewCell {
 		emojiLabel.text = emoji
 	
 		if !isSelected {
-			contentView.backgroundColor = UIColor.ypWhite
+			contentView.backgroundColor = Colors.ypWhite
 		} else {
-			contentView.backgroundColor = UIColor.ypLightGray
+			contentView.backgroundColor = Colors.ypLightGray
 		}
 	}
 }
