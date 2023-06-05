@@ -10,6 +10,7 @@ import UIKit
 final class TrackersViewController: UIViewController {
 	private var dataProvider: IDataProviderProtocol!
 	private var currentDate: Date!
+	private let analyticService = AnalyticServiceManager.shared
 	
 	private var searchBarIsEmpty: Bool {
 		guard let text = searchController.searchBar.text else { return true }
@@ -77,6 +78,14 @@ final class TrackersViewController: UIViewController {
 		checkEmptyTrackers()
 	}
 	
+	override func viewWillAppear(_ animated: Bool) {
+		analyticService.sendEvent(event: "open", parameters: ["screen" : "main"])
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		analyticService.sendEvent(event: "close", parameters: ["screen" : "main"])
+	}
+	
 	func initialize(dataProvider: IDataProviderProtocol) {
 		self.dataProvider = dataProvider
 	}
@@ -139,6 +148,8 @@ final class TrackersViewController: UIViewController {
 	}
 	
 	@objc private func openAddNewTrackerVC() {
+		analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "add_tracker"])
+		
 		let chooseVC = ChooseTrackerViewController()
 		chooseVC.delegate = self
 		present(chooseVC, animated: true)
@@ -196,6 +207,8 @@ extension TrackersViewController: UICollectionViewDataSource {
 
 extension TrackersViewController: ICardTrackCellDelegate {
 	func quantityButtonPressed(_ cell: CardTrackerCell) {
+		analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "track"])
+		
 		guard let indexPath = collectionView.indexPath(for: cell) else { return }
 		guard currentDate <= Date() else { return }
 		guard let tracker = dataProvider.getTrackerObject(at: indexPath) else { return }

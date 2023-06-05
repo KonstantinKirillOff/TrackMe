@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.rootViewController = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
 		UITabBar.appearance().barTintColor = Colors.backgroundColor
 		UINavigationBar.appearance().barTintColor = Colors.backgroundColor
+		
+		AnalyticServiceManager.shared.activate()
 		return true
 	}
 	
