@@ -1,0 +1,21 @@
+/* 
+  Localizable.strings
+  TrackMe
+
+  Created by Konstantin Kirillov on 05.06.2023.
+  
+*/
+
+//TrackersScreen
+"trackersVC_header" = "Trackers";
+"trackersVC_filterButtonName" = "Filters";
+"tabBarItemTracker" = "Trackers";
+"tabBarItemStatistics" = "Statistics";
+"trackersVC_stub" = "What will we track?";
+
+//Filters
+"filterTitle" = "Filters";
+"allTrackers" = "All trackers";
+"trackersForToday" = "Trackers for today";
+"completed" = "Completed";
+"notCompleted" = "Not completed";

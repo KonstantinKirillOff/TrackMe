@@ -35,8 +35,32 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 		return fetchedResultsController
 	}()
 	
-	override init() {
-		self.context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+	init(context: NSManagedObjectContext) {
+		self.context = context
+	}
+	
+	convenience override init() {
+		let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+		self.init(context: context)
+		
+		let pinnedCategoryIsCreated = UserDefaults.standard.bool(forKey: Constants.pinnedCategoryIsCreatedKey)
+		if !pinnedCategoryIsCreated {
+			self.createPinnedCategory()
+		}
+	}
+	
+	private func createPinnedCategory() {
+		let id = UUID()
+		let trackerCategory = TrackerCategory(id: id,
+											  name: "Закрепленные",
+											  trackers: [])
+		do {
+			try addNewCategory(trackerCategory)
+			UserDefaults.standard.set(true, forKey: Constants.pinnedCategoryIsCreatedKey)
+			UserDefaults.standard.set(id.uuidString, forKey: Constants.pinnedCategoryIdKey)
+		} catch {
+			//TODO: handle error
+		}
 	}
 	
 	func setDelegate(delegateForStore: ITrackerCategoryStoreDelegate) {

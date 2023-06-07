@@ -29,6 +29,8 @@ final class TrackerStore: NSObject, ITrackerStoreProtocol {
 		trackerCoreData.name = tracker.name
 		trackerCoreData.emoji = tracker.emoji
 		trackerCoreData.hexColor = tracker.color.toHexString
+		trackerCoreData.isHabit = tracker.isHabit
+		trackerCoreData.idCategoryBeforePin = tracker.idCategoryBeforePin
 		trackerCoreData.schedule = Array(tracker.schedule).joined(separator: ",")
 		trackerCoreData.category = category
 		try context.save()
@@ -78,6 +80,8 @@ final class TrackerStore: NSObject, ITrackerStoreProtocol {
 			trackerForChange.name = tracker.name
 			trackerForChange.emoji = tracker.emoji
 			trackerForChange.hexColor = tracker.color.toHexString
+			trackerForChange.isHabit = tracker.isHabit
+			trackerForChange.idCategoryBeforePin = tracker.idCategoryBeforePin
 			trackerForChange.schedule = Array(tracker.schedule).joined(separator: ",")
 			trackerForChange.category = category
 			try context.save()
@@ -104,7 +108,9 @@ final class TrackerStore: NSObject, ITrackerStoreProtocol {
 					   name: name,
 					   color: UIColor.color(fromHex: colorHex),
 					   emoji: emojies,
-					   schedule: Set(schedule.components(separatedBy: ",")))
+					   schedule: Set(schedule.components(separatedBy: ",")),
+					   isHabit: trackerCoreData.isHabit,
+					   idCategoryBeforePin: trackerCoreData.idCategoryBeforePin,
+					   isPinned: trackerCoreData.isPinned)
 	}
-		
 }

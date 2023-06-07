@@ -13,6 +13,20 @@ struct Tracker {
 	let color: UIColor
 	let emoji: String
 	let schedule: Set<String>
+	let isHabit: Bool
+	let idCategoryBeforePin: String?
+	let isPinned: Bool
+}
+
+extension Tracker: Equatable {
+	static func == (lrh: Tracker, rhs: Tracker) -> Bool {
+		lrh.id == rhs.id ? true : false
+	}
+}
+
+enum PinStatus {
+	case pinned
+	case unpinned
 }
 
 struct TrackerCategory {

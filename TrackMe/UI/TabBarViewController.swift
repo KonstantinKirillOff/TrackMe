@@ -20,12 +20,14 @@ final class TabBarViewController: UITabBarController {
 		trackersVC.initialize(dataProvider: dataProvider)
 		
 		let trackersScreen = UINavigationController(rootViewController: trackersVC)
-		trackersScreen.tabBarItem = UITabBarItem(title: "Трэкеры",
+		let trackerScreenTitle = NSLocalizedString("tabBarItemTracker", comment: "Text displayed on tapBat for trackers screen")
+		trackersScreen.tabBarItem = UITabBarItem(title: trackerScreenTitle,
 											 image: UIImage(named: "TrackersTabBar"),
 											 selectedImage: nil)
 		
 		let statisticsVC = UINavigationController(rootViewController: StatisticsViewController())
-		statisticsVC.tabBarItem = UITabBarItem(title: "Статистика",
+		let statisticsScreenTitle = NSLocalizedString("tabBarItemStatistics", comment: "Text displayed on tapBat for statistics screen")
+		statisticsVC.tabBarItem = UITabBarItem(title: statisticsScreenTitle,
 											   image: UIImage(named: "StatisticTabBar"),
 											   selectedImage: nil)
 		

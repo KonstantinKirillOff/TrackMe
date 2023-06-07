@@ -1,17 +1,17 @@
 //
-//  NewTrackerViewController.swift
+//  EditTrackerVC.swift
 //  TrackMe
 //
-//  Created by Konstantin Kirillov on 17.04.2023.
+//  Created by Konstantin Kirillov on 06.06.2023.
 //
 
 import UIKit
 
-protocol INewTrackerViewControllerDelegate: AnyObject {
-	func newTrackerDidAdd(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: NewTrackerViewController)
+protocol IEditTrackerViewControllerDelegate: AnyObject {
+	func newTrackerDidAdd(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: EditTrackerViewController)
 }
 
-final class NewTrackerViewController: UIViewController {
+final class EditTrackerViewController: UIViewController{
 	private let colors = (1...18).map { UIColor(named: "Color\($0)") ?? .darkGray }
 	private let emojies = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
 						   "😇", "😡", "🥶", "🤔", "🙌", "🍔",
@@ -26,13 +26,19 @@ final class NewTrackerViewController: UIViewController {
 	private var weekSchedule: [String : WeekDay] = [:]
 	private var selectedCategory: CategoryElementViewModel?
 	
-	weak var delegate: INewTrackerViewControllerDelegate?
+	weak var delegate: IEditTrackerViewControllerDelegate?
 	
 	private lazy var headerLabel: UILabel = {
 		let label = UILabel()
 		label.font = UIFont.systemFont(ofSize: 16)
 		label.textAlignment = .center
 		return label
+	}()
+	
+	private lazy var editCountDaysView: EditCountDaysView = {
+		let view = EditCountDaysView()
+		view.delegate = self
+		return view
 	}()
 	
 	private lazy var nameTrackerTextField: UITextField = {
@@ -95,7 +101,7 @@ final class NewTrackerViewController: UIViewController {
 	
 	private lazy var addButton: UIButton = {
 		let button = UIButton()
-		button.setTitle("Создать", for: .normal)
+		button.setTitle("Сохранить", for: .normal)
 		button.backgroundColor = Colors.ypBlack
 		button.setTitleColor(Colors.ypWhite, for: .normal)
 		button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
@@ -138,7 +144,7 @@ final class NewTrackerViewController: UIViewController {
 		setupColorCollectionView()
 	}
 	
-	func configViewController(header: String, trackerTypes: [String], delegate: INewTrackerViewControllerDelegate) {
+	func configViewController(header: String, trackerTypes: [String], delegate: IEditTrackerViewControllerDelegate) {
 		self.trackerTypes = trackerTypes
 		self.headerForView = header
 		self.delegate = delegate
@@ -302,7 +308,7 @@ final class NewTrackerViewController: UIViewController {
 	}
 }
 
-extension NewTrackerViewController: UITableViewDataSource {
+extension EditTrackerViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		trackerTypes.count
 	}
@@ -330,7 +336,7 @@ extension NewTrackerViewController: UITableViewDataSource {
 	}
 }
 
-extension NewTrackerViewController: UITableViewDelegate {
+extension EditTrackerViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.row == 1 {
 			let scheduleVC = ScheduleViewController()
@@ -346,14 +352,14 @@ extension NewTrackerViewController: UITableViewDelegate {
 	}
 }
 
-extension NewTrackerViewController: IScheduleControllerDelegate {
+extension EditTrackerViewController: IScheduleControllerDelegate {
 	func getScheduleForTracker(weekDays: Set<WeekDay>) {
 		weekDays.forEach { weekSchedule[$0.getNumberDay()] = $0 }
 		tableView.reloadData()
 	}
 }
 
-extension NewTrackerViewController: ICategoryListViewControllerDelegate {
+extension EditTrackerViewController: ICategoryListViewControllerDelegate {
 	func categoryDidSelected(category: CategoryElementViewModel, vc: CategoryListViewController) {
 		vc.dismiss(animated: true) { [weak self] in
 			guard let self = self else { return }
@@ -363,7 +369,7 @@ extension NewTrackerViewController: ICategoryListViewControllerDelegate {
 	}
 }
 
-extension NewTrackerViewController: UICollectionViewDataSource {
+extension EditTrackerViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		collectionView == emojiCollectionView ? emojies.count : colors.count
 	}
@@ -381,7 +387,7 @@ extension NewTrackerViewController: UICollectionViewDataSource {
 	}
 }
 
-extension NewTrackerViewController: UICollectionViewDelegate {
+extension EditTrackerViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if collectionView == emojiCollectionView {
 			let emoji = emojies[indexPath.row]
@@ -407,7 +413,7 @@ extension NewTrackerViewController: UICollectionViewDelegate {
 	}
 }
 
-extension NewTrackerViewController: UICollectionViewDelegateFlowLayout {
+extension EditTrackerViewController: UICollectionViewDelegateFlowLayout {
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		CGSize(width: 52, height: 52)
 	}
@@ -424,3 +430,14 @@ extension NewTrackerViewController: UICollectionViewDelegateFlowLayout {
 		UIEdgeInsets(top: 24, left: 18, bottom: 24, right: 18)
 	}
 }
+
+extension EditTrackerViewController: EditCountDaysViewDelegate {
+	func checkDay() {
+		//TODO: changeRecord
+	}
+	
+	func uncheckDay() {
+		//TODO: changeRecord
+	}
+}
+

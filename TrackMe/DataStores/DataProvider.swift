@@ -43,7 +43,9 @@ protocol IDataProviderProtocol {
 	
 	
 	func fetchResultControllerIsEmpty() -> Bool
-	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date) throws
+	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date, filtersForTrackerList: Filters) throws
+	
+	func changePinStatusForTracker(tracker: Tracker, pinStatus: PinStatus) throws
 }
 
 // MARK: - DataProvider
@@ -110,6 +112,23 @@ extension DataProvider: IDataProviderProtocol {
 		}
 	}
 	
+	func changePinStatusForTracker(tracker: Tracker, pinStatus: PinStatus) throws {
+		guard let trackerCoreData = trackerStore.fetchTracker(by: tracker.id.uuidString) else { return }
+		
+		switch pinStatus {
+		case .pinned:
+			guard let idPinnedCategory = UserDefaults.standard.string(forKey: Constants.pinnedCategoryIdKey) else { return }
+			trackerCoreData.category = trackerCategoryStore.fetchCategory(by: idPinnedCategory)
+			trackerCoreData.isPinned = true
+		case .unpinned:
+			guard let idCategoryBeforePin = tracker.idCategoryBeforePin else { return }
+			trackerCoreData.category = trackerCategoryStore.fetchCategory(by: idCategoryBeforePin)
+			trackerCoreData.isPinned = false
+		}
+		try context.save()
+		try fetchedResultsController.performFetch()
+	}
+	
 	func deleteAllTrackers() throws {
 		do {
 			try trackerStore.deleteAllTrackers()
@@ -117,15 +136,6 @@ extension DataProvider: IDataProviderProtocol {
 			throw StoreErrors.deleteElementError
 		}
 	}
-	
-//	func changeTracker(by id: String, tracker: Tracker) throws {
-//		guard let category = fetchCategory(by: tracker.) else {
-//			return
-//		}
-//		trackerStore.changeTracker(by: id,
-//								   tracker: tracker,
-//								   category: category)
-//	}
 	
 	func addNewCategory(_ trackerCategory: TrackerCategory) throws {
 		do {
@@ -151,7 +161,7 @@ extension DataProvider: IDataProviderProtocol {
 		fetchedResultsController.fetchedObjects?.count == 0
 	}
 	
-	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date) throws {
+	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date, filtersForTrackerList: Filters) throws {
 		let dayNumber = WeekDay.getWeekDayInNumber(for: day)
 		var predicates: [NSPredicate] = []
 		
@@ -161,6 +171,17 @@ extension DataProvider: IDataProviderProtocol {
 		if !searchString.isEmpty {
 			let predicateForSearchController = NSPredicate(format: "%K CONTAINS[n] %@", #keyPath(TrackerCoreData.name), searchString)
 			predicates.append(predicateForSearchController)
+		}
+		
+		switch filtersForTrackerList {
+		case .isCompleted:
+			let completedPredicate = NSPredicate(format: "%K CONTAINS[c] %@", #keyPath(TrackerCoreData.records), day.stringDateRecordFormat)
+			predicates.append(completedPredicate)
+		case .isNotComplited:
+			let completedPredicate = NSPredicate(format: "%K CONTAINS[n] %@", #keyPath(TrackerCoreData.records), day as NSDate)
+			predicates.append(completedPredicate)
+		case .isAllTrackers:
+			break
 		}
 		
 		do {
