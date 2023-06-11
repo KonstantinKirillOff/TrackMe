@@ -22,12 +22,18 @@ protocol IDataProviderDelegate: AnyObject {
 	func trackersStoreDidUpdate()
 }
 
+protocol DataProviderStatisticProtocol: AnyObject {
+	var isTrackersInCoreData: Bool { get }
+	func getCountCompletedTrackers() -> Int
+}
+
 protocol IDataProviderProtocol {
 	var numberOfSections: Int { get }
 	func numberOfRowsInSection(_ section: Int) -> Int
 	func nameOfSection(_ section: Int) -> String
 	
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws
+	func changeTracker(tracker: Tracker, category: TrackerCategoryCoreData) throws
 	func getTrackerCoreData(at indexPath: IndexPath) -> TrackerCoreData
 	func getTrackerObject(at: IndexPath) -> Tracker?
 	
@@ -36,6 +42,7 @@ protocol IDataProviderProtocol {
 	func addTrackerRecord(_ trackerRecord: TrackerRecord, for tracker: TrackerCoreData) throws
 	func deleteRecord(date: Date, trackerID: String)
 	func deleteAllTrackers() throws
+	func deleteTracker(by id: String) throws
 	
 	func addNewCategory(_ trackerCategory: TrackerCategory) throws
 	func fetchCategory(by id: String) -> TrackerCategoryCoreData?
@@ -43,7 +50,7 @@ protocol IDataProviderProtocol {
 	
 	
 	func fetchResultControllerIsEmpty() -> Bool
-	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date, filtersForTrackerList: Filters) throws
+	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date, filtersForTrackerList: FilterType) throws
 	
 	func changePinStatusForTracker(tracker: Tracker, pinStatus: PinStatus) throws
 }
@@ -52,6 +59,7 @@ protocol IDataProviderProtocol {
 final class DataProvider: NSObject {
 	weak var delegate: IDataProviderDelegate?
 	
+	private let settingsManager = SettingsManager.shared
 	private let context: NSManagedObjectContext
 	private let trackerStore: ITrackerStoreProtocol
 	private let trackerCategoryStore: ITrackerCategoryStoreProtocol
@@ -112,13 +120,20 @@ extension DataProvider: IDataProviderProtocol {
 		}
 	}
 	
+	func changeTracker(tracker: Tracker, category: TrackerCategoryCoreData) throws {
+		do {
+			try trackerStore.changeTracker(tracker: tracker, category: category)
+		} catch {
+			throw StoreErrors.changeElementError
+		}
+	}
+	
 	func changePinStatusForTracker(tracker: Tracker, pinStatus: PinStatus) throws {
 		guard let trackerCoreData = trackerStore.fetchTracker(by: tracker.id.uuidString) else { return }
 		
 		switch pinStatus {
 		case .pinned:
-			guard let idPinnedCategory = UserDefaults.standard.string(forKey: Constants.pinnedCategoryIdKey) else { return }
-			trackerCoreData.category = trackerCategoryStore.fetchCategory(by: idPinnedCategory)
+			trackerCoreData.category = trackerCategoryStore.fetchCategory(by: settingsManager.pinnedCategoryId)
 			trackerCoreData.isPinned = true
 		case .unpinned:
 			guard let idCategoryBeforePin = tracker.idCategoryBeforePin else { return }
@@ -132,6 +147,14 @@ extension DataProvider: IDataProviderProtocol {
 	func deleteAllTrackers() throws {
 		do {
 			try trackerStore.deleteAllTrackers()
+		} catch {
+			throw StoreErrors.deleteElementError
+		}
+	}
+	
+	func deleteTracker(by id: String) throws {
+		do {
+			try trackerStore.deleteTracker(by: id)
 		} catch {
 			throw StoreErrors.deleteElementError
 		}
@@ -161,26 +184,32 @@ extension DataProvider: IDataProviderProtocol {
 		fetchedResultsController.fetchedObjects?.count == 0
 	}
 	
-	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date, filtersForTrackerList: Filters) throws {
+	func addFiltersForFetchResultController(searchControllerText searchString: String, currentDay day: Date, filtersForTrackerList: FilterType) throws {
 		let dayNumber = WeekDay.getWeekDayInNumber(for: day)
 		var predicates: [NSPredicate] = []
 		
-		let predicateForDate = NSPredicate(format: "%K CONTAINS[n] %@", #keyPath(TrackerCoreData.schedule), dayNumber)
-		predicates.append(predicateForDate)
-		
 		if !searchString.isEmpty {
-			let predicateForSearchController = NSPredicate(format: "%K CONTAINS[n] %@", #keyPath(TrackerCoreData.name), searchString)
+			let predicateForSearchController = NSPredicate(format: "%K CONTAINS[n] %@",
+														   #keyPath(TrackerCoreData.name),
+														   searchString)
 			predicates.append(predicateForSearchController)
 		}
 		
 		switch filtersForTrackerList {
-		case .isCompleted:
-			let completedPredicate = NSPredicate(format: "%K CONTAINS[c] %@", #keyPath(TrackerCoreData.records), day.stringDateRecordFormat)
+		case .completed:
+			let completedPredicate = NSPredicate(format: "records.date CONTAINS[cd] %@",
+												 day as NSDate)
 			predicates.append(completedPredicate)
-		case .isNotComplited:
-			let completedPredicate = NSPredicate(format: "%K CONTAINS[n] %@", #keyPath(TrackerCoreData.records), day as NSDate)
+		case .notCompleted:
+			let completedPredicate = NSPredicate(format: "NOT (records.date CONTAINS[cd] %@)",
+												 day as NSDate)
 			predicates.append(completedPredicate)
-		case .isAllTrackers:
+		case .trackersForToday:
+			let predicateForDate = NSPredicate(format: "%K CONTAINS[n] %@",
+											   #keyPath(TrackerCoreData.schedule),
+											   dayNumber)
+			predicates.append(predicateForDate)
+		case .allTrackers:
 			break
 		}
 		
@@ -217,5 +246,18 @@ extension DataProvider: IDataProviderProtocol {
 extension DataProvider: NSFetchedResultsControllerDelegate {
 	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 		delegate?.trackersStoreDidUpdate()
+	}
+}
+
+extension DataProvider: DataProviderStatisticProtocol {
+	func getCountCompletedTrackers() -> Int {
+		trackerRecordStore.finishedTrackersForDate(date: Date().getDayWithoutTime()).count
+	}
+	
+	var isTrackersInCoreData: Bool {
+		let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+		let result = try? context.fetch(fetchRequest)
+		guard let isEmpty = result?.isEmpty else { return false }
+		return !isEmpty
 	}
 }

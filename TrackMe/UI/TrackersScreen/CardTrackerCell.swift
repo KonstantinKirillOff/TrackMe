@@ -13,6 +13,11 @@ protocol ICardTrackCellDelegate: AnyObject {
 final class CardTrackerCell: UICollectionViewCell {
 	static let identifier = "trackerCell"
 	weak var delegate: ICardTrackCellDelegate?
+	var interaction: UIContextMenuInteraction? {
+		didSet {
+			if let interaction { cardView.addInteraction(interaction) }
+		}
+	}
 	
 	private lazy var emojiView: UIView = {
 		let emojiView = UIView()
@@ -75,6 +80,14 @@ final class CardTrackerCell: UICollectionViewCell {
 		return stackView
 	}()
 	
+	private lazy var pinImageView: UIImageView = {
+		let imageView = UIImageView()
+		imageView.image = UIImage(named: "pin")
+		imageView.isHidden = true
+		imageView.translatesAutoresizingMaskIntoConstraints = false
+		return imageView
+	}()
+	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setupCardView()
@@ -112,6 +125,13 @@ final class CardTrackerCell: UICollectionViewCell {
 		NSLayoutConstraint.activate([
 			emojiLabel.centerXAnchor.constraint(equalTo: emojiView.centerXAnchor),
 			emojiLabel.centerYAnchor.constraint(equalTo: emojiView.centerYAnchor)
+		])
+		
+		cardView.addSubview(pinImageView)
+		pinImageView.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+			pinImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 18),
+			pinImageView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12)
 		])
 	}
 	
@@ -164,7 +184,10 @@ final class CardTrackerCell: UICollectionViewCell {
 			addQuantityButton.backgroundColor = tracker.color.withAlphaComponent(0.4)
 		}
 		
-		quantityLabel.text = "\(record) дней"
+		pinImageView.isHidden = !tracker.isPinned
+		
+		quantityLabel.text = String.localizedStringWithFormat(
+			NSLocalizedString("DayCount", comment: "count check days"), record)
 	}
 	
 	required init?(coder: NSCoder) {

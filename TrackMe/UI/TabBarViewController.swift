@@ -25,7 +25,9 @@ final class TabBarViewController: UITabBarController {
 											 image: UIImage(named: "TrackersTabBar"),
 											 selectedImage: nil)
 		
-		let statisticsVC = UINavigationController(rootViewController: StatisticsViewController())
+		let statisticProvider = StatisticProvider(dataProvider: dataProvider)
+		let statisticController = StatisticsViewController(statisticProvider: statisticProvider)
+		let statisticsVC = UINavigationController(rootViewController: statisticController)
 		let statisticsScreenTitle = NSLocalizedString("tabBarItemStatistics", comment: "Text displayed on tapBat for statistics screen")
 		statisticsVC.tabBarItem = UITabBarItem(title: statisticsScreenTitle,
 											   image: UIImage(named: "StatisticTabBar"),

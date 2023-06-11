@@ -62,9 +62,11 @@
 		43E990C729FD778A0093C9CB /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E990C629FD778A0093C9CB /* UIColor+Extension.swift */; };
 		43E990C929FD7FA30093C9CB /* EmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E990C829FD7FA30093C9CB /* EmojiCell.swift */; };
 		43E990CB29FD84120093C9CB /* ColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E990CA29FD84120093C9CB /* ColorCell.swift */; };
-		43F3A39A2A3110A000AF76EA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F3A3992A3110A000AF76EA /* Constants.swift */; };
 		43F3A39C2A31169300AF76EA /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F3A39B2A31169300AF76EA /* Date+Extension.swift */; };
-		43F3A39E2A31176700AF76EA /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F3A39D2A31176700AF76EA /* Filters.swift */; };
+		43F3A3A02A32132000AF76EA /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F3A39F2A32132000AF76EA /* SettingsManager.swift */; };
+		43F3A3A32A34A92100AF76EA /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F3A3A22A34A92100AF76EA /* StatisticView.swift */; };
+		43F3A3A52A34A9E100AF76EA /* StatisticProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F3A3A42A34A9E100AF76EA /* StatisticProvider.swift */; };
+		43F3A3A72A34ACA500AF76EA /* PlugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F3A3A62A34ACA500AF76EA /* PlugView.swift */; };
 		A73DF363EAEC7497000279F1 /* Pods_TrackMe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DF70039EA88CAA53757CA2A /* Pods_TrackMe.framework */; };
 		EFEB238E2CADFB8FFF4E3EEA /* Pods_TrackMeTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA3772B1ACE465DBD2EDF66A /* Pods_TrackMeTests.framework */; };
 /* End PBXBuildFile section */
@@ -143,9 +145,11 @@
 		43E990C629FD778A0093C9CB /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		43E990C829FD7FA30093C9CB /* EmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCell.swift; sourceTree = "<group>"; };
 		43E990CA29FD84120093C9CB /* ColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCell.swift; sourceTree = "<group>"; };
-		43F3A3992A3110A000AF76EA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		43F3A39B2A31169300AF76EA /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
-		43F3A39D2A31176700AF76EA /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
+		43F3A39F2A32132000AF76EA /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		43F3A3A22A34A92100AF76EA /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
+		43F3A3A42A34A9E100AF76EA /* StatisticProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticProvider.swift; sourceTree = "<group>"; };
+		43F3A3A62A34ACA500AF76EA /* PlugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugView.swift; sourceTree = "<group>"; };
 		4DF70039EA88CAA53757CA2A /* Pods_TrackMe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackMe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		60B24F4E8F25AE4A1DABBB3A /* Pods-TrackMe.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackMe.debug.xcconfig"; path = "Target Support Files/Pods-TrackMe/Pods-TrackMe.debug.xcconfig"; sourceTree = "<group>"; };
 		83AA8EE8ABE8B32951DFE9A5 /* Pods-TrackMeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackMeTests.release.xcconfig"; path = "Target Support Files/Pods-TrackMeTests/Pods-TrackMeTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -223,7 +227,7 @@
 				43E990C329FD74A30093C9CB /* CustomUIElements */,
 				4352D9442A112BEE0024FFEE /* OnboardingScreen */,
 				431564B729D33A3800A1DC3A /* TabBarViewController.swift */,
-				4326C16429E7E49B00A78303 /* StatisticsViewController.swift */,
+				43F3A3A12A34A8E600AF76EA /* StatisticScreen */,
 				43E990C029FD74210093C9CB /* TrackersScreen */,
 				4329313F29ED801900D4DB60 /* ChooseTrackerViewController.swift */,
 				43E990C229FD74630093C9CB /* NewTrackerScreen */,
@@ -276,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				432F3ACB2A2E67E4008E0A1B /* AnalyticService.swift */,
+				43F3A39F2A32132000AF76EA /* SettingsManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -289,7 +294,6 @@
 				436C974E2A2FB712000D2B04 /* UIFont+Extension.swift */,
 				436C97502A2FB9E0000D2B04 /* UIView+Extension.swift */,
 				436C97562A2FBE52000D2B04 /* Collection+Extension.swift */,
-				43F3A3992A3110A000AF76EA /* Constants.swift */,
 				43F3A39B2A31169300AF76EA /* Date+Extension.swift */,
 			);
 			path = Helpers;
@@ -359,7 +363,6 @@
 				436C974C2A2FB420000D2B04 /* FiltersCollectionViewCell.swift */,
 				436C97522A2FBA5E000D2B04 /* FiltersViewController.swift */,
 				436C97542A2FBCF3000D2B04 /* FiltersProvider.swift */,
-				43F3A39D2A31176700AF76EA /* Filters.swift */,
 			);
 			path = FiltersViewController;
 			sourceTree = "<group>";
@@ -422,8 +425,19 @@
 			children = (
 				43E990C429FD74D10093C9CB /* CustomTextField.swift */,
 				436C97612A2FC51F000D2B04 /* EditCountDaysVIew.swift */,
+				43F3A3A62A34ACA500AF76EA /* PlugView.swift */,
 			);
 			path = CustomUIElements;
+			sourceTree = "<group>";
+		};
+		43F3A3A12A34A8E600AF76EA /* StatisticScreen */ = {
+			isa = PBXGroup;
+			children = (
+				4326C16429E7E49B00A78303 /* StatisticsViewController.swift */,
+				43F3A3A22A34A92100AF76EA /* StatisticView.swift */,
+				43F3A3A42A34A9E100AF76EA /* StatisticProvider.swift */,
+			);
+			path = StatisticScreen;
 			sourceTree = "<group>";
 		};
 		A2ADA1D60778A0A15D9E19E0 /* Frameworks */ = {
@@ -635,6 +649,7 @@
 				43E990C529FD74D10093C9CB /* CustomTextField.swift in Sources */,
 				433E3C4429F4158100067202 /* WeekDays.swift in Sources */,
 				438AD7E729FEFF1000730601 /* TrackerStore.swift in Sources */,
+				43F3A3A32A34A92100AF76EA /* StatisticView.swift in Sources */,
 				4352D95D2A18B92F0024FFEE /* Observable.swift in Sources */,
 				438AD7F129FFB1C700730601 /* TrackerStoreProtocol.swift in Sources */,
 				438AD7F329FFB37300730601 /* TrackerCategoryStoreProtocol.swift in Sources */,
@@ -653,12 +668,13 @@
 				4352D9652A1A760F0024FFEE /* AlertPresenter.swift in Sources */,
 				4326C16B29E8354800A78303 /* CardTrackerCell.swift in Sources */,
 				4329314229ED8F6B00D4DB60 /* NewTrackerViewController.swift in Sources */,
+				43F3A3A72A34ACA500AF76EA /* PlugView.swift in Sources */,
 				43E990C729FD778A0093C9CB /* UIColor+Extension.swift in Sources */,
 				43E990CB29FD84120093C9CB /* ColorCell.swift in Sources */,
+				43F3A3A52A34A9E100AF76EA /* StatisticProvider.swift in Sources */,
 				4352D9462A112C500024FFEE /* OnboardingScreenOneViewController.swift in Sources */,
 				43F3A39C2A31169300AF76EA /* Date+Extension.swift in Sources */,
 				4352D9512A1625610024FFEE /* NewCategoryVC.swift in Sources */,
-				43F3A39E2A31176700AF76EA /* Filters.swift in Sources */,
 				4326C16529E7E49B00A78303 /* StatisticsViewController.swift in Sources */,
 				4352D9622A1A6EFE0024FFEE /* ChangeCategoryVC.swift in Sources */,
 				438AD7F529FFB52400730601 /* TrackerRecordStoreProtocol.swift in Sources */,
@@ -671,6 +687,7 @@
 				438AD7EF29FFAED700730601 /* DataProvider.swift in Sources */,
 				438AD7EB29FEFF3D00730601 /* TrackerRecordStore.swift in Sources */,
 				438AD7E929FEFF2B00730601 /* TrackerCategoryStore.swift in Sources */,
+				43F3A3A02A32132000AF76EA /* SettingsManager.swift in Sources */,
 				436C974D2A2FB420000D2B04 /* FiltersCollectionViewCell.swift in Sources */,
 				43002E2F2A2D23E4006FCDB1 /* Colors.swift in Sources */,
 				43E990C929FD7FA30093C9CB /* EmojiCell.swift in Sources */,
@@ -679,7 +696,6 @@
 				436C97532A2FBA5E000D2B04 /* FiltersViewController.swift in Sources */,
 				438AD7E429FEFBC200730601 /* TrackersCoreDataModel.xcdatamodeld in Sources */,
 				436C97622A2FC51F000D2B04 /* EditCountDaysVIew.swift in Sources */,
-				43F3A39A2A3110A000AF76EA /* Constants.swift in Sources */,
 				436C97602A2FC305000D2B04 /* EditTrackerVC.swift in Sources */,
 				436C97572A2FBE52000D2B04 /* Collection+Extension.swift in Sources */,
 			);

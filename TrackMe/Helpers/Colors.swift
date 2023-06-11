@@ -20,4 +20,7 @@ final class Colors {
 	static let ypLightGray = UIColor(named: "YPLightGray")
 	static let ypDatePickerColor = UIColor(named: "DatePickerColor")
 	static let ypOrange = UIColor(named: "Color2")
+	static let ypGradient1 = UIColor(named: "Gradient1")!
+	static let ypGradient2 = UIColor(named: "Gradient2")!
+	static let ypGradient3 = UIColor(named: "Gradient3")!
 }

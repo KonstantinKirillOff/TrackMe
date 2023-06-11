@@ -19,3 +19,19 @@
 "trackersForToday" = "Trackers for today";
 "completed" = "Completed";
 "notCompleted" = "Not completed";
+
+//editMenu
+"searchBarPlaceholderText" = "Search";
+"searchBarCancelButtonText" = "Cancel";
+"deleteActionSheetMessage" = "Delete this tracker?";
+"deleteActionTitle" = "Delete";
+"cancelActionSheetButtonTitle" = "Cancel";
+"editActionTitle" = "Edit";
+"toPinTracker" = "To pin";
+"toUnpinTracker" = "To unpin";
+
+//statistic
+"bestPeriod" = "Best period";
+"perfectPeriod" = "Perfect period";
+"completedTrackers" = "Completed trackers";
+"averageValue" = "Average Value";

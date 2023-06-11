@@ -50,7 +50,7 @@ enum WeekDay: String, CaseIterable {
 		case .thursday:
 			return "Четверг"
 		case .friday:
-			return "Пятрица"
+			return "Пятница"
 		case .saturday:
 			return "Суббота"
 		case .sunday:

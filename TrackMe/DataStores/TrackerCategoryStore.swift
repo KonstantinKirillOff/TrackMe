@@ -18,13 +18,16 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 	}
 	
 	weak var delegate: ITrackerCategoryStoreDelegate?
-	
+	private let settingsManager = SettingsManager.shared
 	private let context: NSManagedObjectContext
 	
 	private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData> = {
 
 		let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.name, ascending: true)]
+		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryCoreData.createdAt,
+														 ascending: true)]
+		fetchRequest.predicate = NSPredicate(format: "%K != %@",
+											 #keyPath(TrackerCategoryCoreData.categoryID), settingsManager.pinnedCategoryId)
 		
 		let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
 																  managedObjectContext: context,
@@ -43,8 +46,7 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 		let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 		self.init(context: context)
 		
-		let pinnedCategoryIsCreated = UserDefaults.standard.bool(forKey: Constants.pinnedCategoryIsCreatedKey)
-		if !pinnedCategoryIsCreated {
+		if !settingsManager.pinnedCategoryIsCreated {
 			self.createPinnedCategory()
 		}
 	}
@@ -56,8 +58,8 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 											  trackers: [])
 		do {
 			try addNewCategory(trackerCategory)
-			UserDefaults.standard.set(true, forKey: Constants.pinnedCategoryIsCreatedKey)
-			UserDefaults.standard.set(id.uuidString, forKey: Constants.pinnedCategoryIdKey)
+			settingsManager.pinnedCategoryIsCreated = true
+			settingsManager.pinnedCategoryId = id.uuidString
 		} catch {
 			//TODO: handle error
 		}
@@ -71,6 +73,7 @@ final class TrackerCategoryStore: NSObject, ITrackerCategoryStoreProtocol {
 		let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
 		trackerCategoryCoreData.categoryID = trackerCategory.id.uuidString
 		trackerCategoryCoreData.name = trackerCategory.name
+		trackerCategoryCoreData.createdAt = Date()
 		try context.save()
 	}
 	

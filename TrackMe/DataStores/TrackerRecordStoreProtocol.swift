@@ -11,4 +11,5 @@ protocol ITrackerRecordStoreProtocol {
 	func deleteRecord(date: Date, trackerID: String)
 	func trackerTrackedToday(date: Date, trackerID: String) -> Bool
 	func countRecordForTracker(trackerID: String) -> Int
+	func finishedTrackersForDate(date: Date) -> [TrackerCoreData]
 }

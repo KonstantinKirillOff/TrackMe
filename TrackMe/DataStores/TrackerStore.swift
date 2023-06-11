@@ -69,10 +69,10 @@ final class TrackerStore: NSObject, ITrackerStoreProtocol {
 		return trackers.first
 	}
 	
-	func changeTracker(by id: String, tracker: Tracker, category: TrackerCategoryCoreData) throws {
+	func changeTracker(tracker: Tracker, category: TrackerCategoryCoreData) throws {
 		let request = TrackerCoreData.fetchRequest()
 		request.returnsObjectsAsFaults = false
-		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), id)
+		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), tracker.id.uuidString)
 		
 		guard let trackers = try? context.fetch(request) else { return }
 		if let trackerForChange = trackers.first {

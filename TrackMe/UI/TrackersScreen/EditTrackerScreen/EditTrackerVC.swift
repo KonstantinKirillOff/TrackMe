@@ -8,7 +8,7 @@
 import UIKit
 
 protocol IEditTrackerViewControllerDelegate: AnyObject {
-	func newTrackerDidAdd(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: EditTrackerViewController)
+	func trackerDidEdit(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: EditTrackerViewController)
 }
 
 final class EditTrackerViewController: UIViewController{
@@ -303,7 +303,7 @@ final class EditTrackerViewController: UIViewController{
 								 idCategoryBeforePin: category.id,
 								 isPinned: false)
 	
-		delegate?.newTrackerDidAdd(tracker: newTracker, selectedCategory: category, vc: self)
+		delegate?.trackerDidEdit(tracker: newTracker, selectedCategory: category, vc: self)
 		dismiss(animated: true)
 	}
 }

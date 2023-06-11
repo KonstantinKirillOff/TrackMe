@@ -22,4 +22,9 @@ extension Date {
 		dateFormatter.dateStyle = .short
 		return dateFormatter.string(from: self)
 	}
+	
+	func getDayWithoutTime() -> Date {
+		let dateWithoutTime = Calendar.current.dateComponents([.year, .month, .day], from: self)
+		return Calendar.current.date(from: dateWithoutTime)!
+	}
 }

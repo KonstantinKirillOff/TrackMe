@@ -19,3 +19,19 @@
 "trackersForToday" = "Трэкеры на сегодня";
 "completed" = "Завершенные";
 "notCompleted" = "Не завершенные";
+
+//editMenu
+"searchBarPlaceholderText" = "Поиск";
+"searchBarCancelButtonText" = "Отмена";
+"deleteActionSheetMessage" = "Уверены что хотите удалить трекер?";
+"deleteActionTitle" = "Удалить";
+"cancelActionSheetButtonTitle" = "Отменить";
+"editActionTitle" = "Редактировать";
+"toPinTracker" = "Закрепить";
+"toUnpinTracker" = "Открепить";
+
+//statistic
+"bestPeriod" = "Лучший период";
+"perfectPeriod" = "Идеальный период";
+"completedTrackers" = "Трекеров завершено";
+"averageValue" = "Среднее значение";
