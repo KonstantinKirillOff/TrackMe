@@ -11,6 +11,7 @@ final class TrackersViewController: UIViewController {
 	private var dataProvider: IDataProviderProtocol!
 	private var currentDate: Date!
 	private let analyticService = AnalyticServiceManager.shared
+	private let settingsManager = SettingsManager.shared
 	private var selectedFilter: FilterType = .trackersForToday
 	
 	private var searchBarIsEmpty: Bool {
@@ -201,28 +202,20 @@ final class TrackersViewController: UIViewController {
 	}
 	
 	private func editTracker(tracker: Tracker) {
-//		let editTypeTracker: EditTypeTracker = tracker.isHabit ? .editHabit : .editEvent
-//		let countAndCompleted = getDayCountAndDayCompleted(for: tracker.id)
-//		let schedule = getSchedule(for: tracker.schedule)
-//		let editTracker = EditTracker(
-//			tracker: tracker,
-//			categoryTitle: category.title ?? "",
-//			schedule: schedule,
-//			checkCountDay: countAndCompleted.count,
-//			isChecked: countAndCompleted.completed,
-//			canCheck: Date() < datePicker.date,
-//			indexPath: indexPath
-//		)
-//		let viewController = EditTrackerViewController(
-//			editTypeTracker: editTypeTracker,
-//			editTracker: editTracker,
-//			selectedCategory: category,
-//			selectedDay: datePicker.date
-//		)
-//		viewController.delegate = self
-//		let navigationViewController = UINavigationController(rootViewController: viewController)
-//		present(navigationViewController, animated: true)
-		print("edit screen")
+		guard let currentIdCategory = tracker.idCategoryBeforePin,
+		let currentCategory = dataProvider.fetchCategory(by: currentIdCategory) else { return }
+		
+		let categoryVM = CategoryElementViewModel(id: currentCategory.categoryID ?? "",
+												  name: currentCategory.name ?? "",
+												  selectedCategory: true)
+		
+		let editTrackerVC = EditTrackerViewController(tracker: tracker, selectedDay: currentDate)
+		let trackerTypes = tracker.isHabit ? ["Категория", "Расписание"] : ["Категория"]
+		editTrackerVC.configViewController(header: trackerTypes.count > 1 ? "Редактирование привычки" : "Редактирование не регулярного события",
+										   trackerTypes: trackerTypes,
+										   delegate: self,
+										   selectedCategory: categoryVM)
+		present(editTrackerVC, animated: true)
 	}
 	
 	private func showActionSheetForDeleteTracker(indexPath: IndexPath) {
@@ -410,9 +403,13 @@ extension TrackersViewController: IEditTrackerViewControllerDelegate {
 			guard let self = self else { return }
 			
 			//get category
-			guard let category = self.dataProvider.fetchCategory(by: selectedCategory.id) else {
-				return
+			var category: TrackerCategoryCoreData?
+			if !tracker.isPinned {
+				category = self.dataProvider.fetchCategory(by: selectedCategory.id)
+			} else {
+				category = self.dataProvider.fetchCategory(by: settingsManager.pinnedCategoryId)
 			}
+			guard let category = category else { return }
 
 			//add tracker
 			do {

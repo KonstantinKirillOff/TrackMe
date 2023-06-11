@@ -13,15 +13,7 @@ protocol EditCountDaysViewDelegate: AnyObject {
 }
 
 final class EditCountDaysView: UIStackView {
-	
 	weak var delegate: EditCountDaysViewDelegate?
-	
-	private struct ViewConstant {
-		static let minusButtonImageName = "buttonMinus"
-		static let plusButtonImageName = "buttonPlus"
-		static let countButtonSide: CGFloat = 34
-	}
-	
 	private var countDay: Int = 0 {
 		didSet {
 			if countDay < 0 { countDay = 0 }
@@ -32,7 +24,7 @@ final class EditCountDaysView: UIStackView {
 		let button = UIButton()
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.tintColor = Colors.ypOrange
-		button.setImage(UIImage(named: "minusButton"), for: .normal)
+		button.setImage(UIImage(named: "buttonMinus"), for: .normal)
 		button.addTarget(self, action: #selector(minusButtonTapped), for: .touchUpInside)
 		return button
 	}()
@@ -41,7 +33,7 @@ final class EditCountDaysView: UIStackView {
 		let button = UIButton()
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.tintColor = Colors.ypOrange
-		button.setImage(UIImage(named: "plusButton"), for: .normal)
+		button.setImage(UIImage(named: "buttonPlus"), for: .normal)
 		button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
 		return button
 	}()
@@ -67,7 +59,7 @@ final class EditCountDaysView: UIStackView {
 	}
 	
 	func config(countDay: Int, isChecked: Bool, canCheck: Bool) {
-		self.countDay =  countDay
+		self.countDay = countDay
 		setCountLabelText(with: self.countDay)
 		
 		guard !canCheck else {
@@ -96,8 +88,8 @@ final class EditCountDaysView: UIStackView {
 	private func addSubview() {
 		[minusButton, countLabel, plusButton].forEach { addArrangedSubview($0) }
 		[minusButton, plusButton].forEach({
-			$0.widthAnchor.constraint(equalToConstant: ViewConstant.countButtonSide).isActive = true
-			$0.heightAnchor.constraint(equalToConstant: ViewConstant.countButtonSide).isActive = true
+			$0.widthAnchor.constraint(equalToConstant: 34).isActive = true
+			$0.heightAnchor.constraint(equalToConstant: 34).isActive = true
 		})
 	}
 	

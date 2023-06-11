@@ -12,19 +12,22 @@ protocol IEditTrackerViewControllerDelegate: AnyObject {
 }
 
 final class EditTrackerViewController: UIViewController{
+	private let trackerForEdit: Tracker!
+	private var selectedCategory: CategoryElementViewModel?
+	private var selectedDay: Date
+	
 	private let colors = (1...18).map { UIColor(named: "Color\($0)") ?? .darkGray }
 	private let emojies = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
 						   "😇", "😡", "🥶", "🤔", "🙌", "🍔",
 						   "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
 	
-	private var currentColor: UIColor?
-	private var currentEmoji: String?
+	private var currentColor: UIColor!
+	private var currentEmoji: String!
 	
 	private var trackerTypes = [String]()
 	private var headerForView = ""
-	
 	private var weekSchedule: [String : WeekDay] = [:]
-	private var selectedCategory: CategoryElementViewModel?
+	
 	
 	weak var delegate: IEditTrackerViewControllerDelegate?
 	
@@ -132,6 +135,16 @@ final class EditTrackerViewController: UIViewController{
 		return contentView
 	}()
 	
+	init(tracker: Tracker, selectedDay: Date) {
+		self.trackerForEdit = tracker
+		self.selectedDay = selectedDay
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = Colors.backgroundColor
@@ -144,17 +157,25 @@ final class EditTrackerViewController: UIViewController{
 		setupColorCollectionView()
 	}
 	
-	func configViewController(header: String, trackerTypes: [String], delegate: IEditTrackerViewControllerDelegate) {
+	func configViewController(header: String,
+							  trackerTypes: [String],
+							  delegate: IEditTrackerViewControllerDelegate,
+							  selectedCategory: CategoryElementViewModel) {
+		
 		self.trackerTypes = trackerTypes
 		self.headerForView = header
 		self.delegate = delegate
+		
+		self.selectedCategory = selectedCategory
+		self.currentColor = trackerForEdit.color
+		self.currentEmoji = trackerForEdit.emoji
+		self.nameTrackerTextField.text = trackerForEdit.name
 	}
 	
 	private func setupUIElements() {
 		headerLabel.text = headerForView
 		view.addSubview(headerLabel)
 		headerLabel.translatesAutoresizingMaskIntoConstraints = false
-		
 		NSLayoutConstraint.activate([
 			headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 			headerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -163,7 +184,6 @@ final class EditTrackerViewController: UIViewController{
 		
 		view.addSubview(buttonsHorizontalStackView)
 		buttonsHorizontalStackView.translatesAutoresizingMaskIntoConstraints = false
-		
 		NSLayoutConstraint.activate([
 			buttonsHorizontalStackView.heightAnchor.constraint(equalToConstant: 60),
 			buttonsHorizontalStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
@@ -184,7 +204,6 @@ final class EditTrackerViewController: UIViewController{
 		
 		scrollView.addSubview(contentView)
 		contentView.translatesAutoresizingMaskIntoConstraints = false
-
 		NSLayoutConstraint.activate([
 			contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
 			contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
@@ -196,12 +215,21 @@ final class EditTrackerViewController: UIViewController{
 	}
 	
 	private func setupTextField() {
+		editCountDaysView.config(countDay: 2,
+								 isChecked: true,
+								 canCheck: true)
+		contentView.addSubview(editCountDaysView)
+		editCountDaysView.translatesAutoresizingMaskIntoConstraints = false
+		NSLayoutConstraint.activate([
+			editCountDaysView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+			editCountDaysView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+		])
+		
 		contentView.addSubview(nameTrackerTextField)
 		nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
-
 		NSLayoutConstraint.activate([
 			nameTrackerTextField.heightAnchor.constraint(equalToConstant: 75),
-			nameTrackerTextField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+			nameTrackerTextField.topAnchor.constraint(equalTo: editCountDaysView.bottomAnchor, constant: 40),
 			nameTrackerTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
 			nameTrackerTextField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
 		])
@@ -294,16 +322,16 @@ final class EditTrackerViewController: UIViewController{
 		
 		let currentDayWeek = String(Calendar.current.component(.weekday, from: Date()))
 		let setWithWeekDays = weekSchedule.isEmpty ? Set([currentDayWeek]) : Set(weekSchedule.map({$0.key}))
-		let newTracker = Tracker(id: UUID(),
+		let newTrackerData = Tracker(id: UUID(),
 								 name: trackName,
-								 color: currentColor ?? .blue,
-								 emoji: currentEmoji ?? "💩",
+								 color: currentColor,
+								 emoji: currentEmoji,
 								 schedule: setWithWeekDays,
 								 isHabit: trackerTypes.count > 1 ? true : false,
 								 idCategoryBeforePin: category.id,
-								 isPinned: false)
+								 isPinned: trackerForEdit.isPinned)
 	
-		delegate?.trackerDidEdit(tracker: newTracker, selectedCategory: category, vc: self)
+		delegate?.trackerDidEdit(tracker: newTrackerData, selectedCategory: category, vc: self)
 		dismiss(animated: true)
 	}
 }
@@ -377,11 +405,11 @@ extension EditTrackerViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if collectionView == emojiCollectionView {
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCell.identifier, for: indexPath) as! EmojiCell
-			cell.configCell(for: emojies[indexPath.row], isSelected: false)
+			cell.configCell(for: emojies[indexPath.row], isSelected: emojies[indexPath.row] == currentEmoji)
 			return cell
 		} else {
 			let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCell.identifier, for: indexPath) as! ColorCell
-			cell.configCell(for: colors[indexPath.row], isSelected: false)
+			cell.configCell(for: colors[indexPath.row], isSelected: colors[indexPath.row].toHexString == currentColor.toHexString)
 			return cell
 		}
 	}
