@@ -29,7 +29,17 @@ final class SettingsManager  {
 		}
 	}
 	
+	var isNotFirstLaunch: Bool {
+		get {
+			userDefaults.bool(forKey: Keys.notFirstLaunch.rawValue)
+		}
+		
+		set {
+			userDefaults.set(newValue, forKey: Keys.notFirstLaunch.rawValue)
+		}
+	}
+	
 	private enum Keys: String {
-		case pinnedCategoryIsCreated, pinnedCategoryId
+		case pinnedCategoryIsCreated, pinnedCategoryId, notFirstLaunch
 	}
 }

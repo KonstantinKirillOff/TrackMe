@@ -253,7 +253,10 @@ final class TrackersViewController: UIViewController {
 	
 	private func changePinStatusForTracker(tracker: Tracker, pinStatus: PinStatus) {
 		try? dataProvider.changePinStatusForTracker(tracker: tracker, pinStatus: pinStatus)
-		collectionView.reloadData()
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+			guard let self = self else { return }
+			self.collectionView.reloadData()
+		}
 	}
 	
 	private func loadTrackers(searchString: String, currentDay: Date, filtersForTrackerList: FilterType) {

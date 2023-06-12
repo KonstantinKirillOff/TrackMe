@@ -8,6 +8,8 @@
 import UIKit
 
 final class OnboardingViewController: UIPageViewController {
+	let settingsManager = SettingsManager.shared
+	
 	lazy var pages: [UIViewController] = {
 		let screenOne = OnboardingScreenOneViewController()
 		let screenTwo = OnboardingScreenTwoViewController()
@@ -74,8 +76,10 @@ final class OnboardingViewController: UIPageViewController {
 			assertionFailure("Invalid configuration")
 			return
 		}
+		
 		let tabBarVC = TabBarViewController()
 		window.rootViewController = tabBarVC
+		settingsManager.isNotFirstLaunch = true
 	}
 }
 

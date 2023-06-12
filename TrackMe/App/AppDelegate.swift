@@ -12,11 +12,12 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
+	let settingsManager = SettingsManager.shared
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		window = UIWindow(frame: UIScreen.main.bounds)
 		window?.makeKeyAndVisible()
-		window?.rootViewController = OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+		window?.rootViewController = createViewController()
 		UITabBar.appearance().barTintColor = Colors.backgroundColor
 		UINavigationBar.appearance().barTintColor = Colors.backgroundColor
 		
@@ -34,5 +35,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		})
 		return container
 	}()
+	
+	private func createViewController() -> UIViewController {
+		let isNotFirstLaunch = settingsManager.isNotFirstLaunch
+		
+		if isNotFirstLaunch {
+			return TabBarViewController()
+		} else {
+			return OnboardingViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+		}
+	}
 }
 

@@ -69,8 +69,9 @@ final class DataProvider: NSObject {
 	private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
 
 		let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCoreData.category?.createdAt, ascending: false)]
-		
+		fetchRequest.sortDescriptors = [
+			NSSortDescriptor(keyPath: \TrackerCoreData.category?.createdAt, ascending: true)
+		]
 		let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
 																  managedObjectContext: context,
 																  sectionNameKeyPath: #keyPath(TrackerCoreData.category.name),
