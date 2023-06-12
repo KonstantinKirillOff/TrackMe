@@ -69,7 +69,7 @@ final class DataProvider: NSObject {
 	private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
 
 		let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCoreData.category?.name, ascending: true)]
+		fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCoreData.category?.createdAt, ascending: false)]
 		
 		let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
 																  managedObjectContext: context,
@@ -206,9 +206,9 @@ extension DataProvider: IDataProviderProtocol {
 												 day as NSDate)
 			predicates.append(completedPredicate)
 		case .notCompleted:
-			let completedPredicate = NSPredicate(format: "NOT (records.date CONTAINS[cd] %@)",
-												 day as NSDate)
-			predicates.append(completedPredicate)
+			let notCompletedPredicate = NSPredicate(format: "%K.@count == 0",
+													#keyPath(TrackerCoreData.records))
+			predicates.append(notCompletedPredicate)
 		case .trackersForToday:
 			let predicateForDate = NSPredicate(format: "%K CONTAINS[n] %@",
 											   #keyPath(TrackerCoreData.schedule),

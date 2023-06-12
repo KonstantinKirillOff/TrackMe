@@ -50,7 +50,7 @@ final class TrackerRecordStore: NSObject, ITrackerRecordStoreProtocol {
 		let request = TrackerRecordCoreData.fetchRequest()
 		request.returnsObjectsAsFaults = false
 		request.predicate = NSPredicate(format: "%K == %@",
-										#keyPath(TrackerRecordCoreData.date), date as NSDate )
+										#keyPath(TrackerRecordCoreData.date), date as NSDate)
 		guard let trackersWithRecords = try? context.fetch(request) else { return [] }
 		return trackersWithRecords.compactMap { $0.tracker }
 	}

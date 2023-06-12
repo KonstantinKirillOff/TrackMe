@@ -96,8 +96,6 @@ final class TrackersViewController: UIViewController {
 		loadTrackers(searchString: "",
 					 currentDay: currentDate,
 					 filtersForTrackerList: selectedFilter)
-		
-		checkEmptyTrackers()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -182,12 +180,11 @@ final class TrackersViewController: UIViewController {
 		loadTrackers(searchString: searchText,
 					 currentDay: currentDate,
 					 filtersForTrackerList: selectedFilter)
-		collectionView.reloadData()
-		checkEmptyTrackers()
 	}
 	
 	@objc
 	private func filterButtonTapped() {
+		analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "filter"])
 		filterButton.showAnimation { [weak self] in
 			guard let self else { return }
 			self.showFilterViewController()
@@ -264,6 +261,8 @@ final class TrackersViewController: UIViewController {
 			try dataProvider.addFiltersForFetchResultController(searchControllerText: searchString,
 																currentDay: currentDay.getDayWithoutTime(),
 																filtersForTrackerList: filtersForTrackerList)
+			collectionView.reloadData()
+			checkEmptyTrackers()
 		} catch {
 			//TODO: show alert
 			print(error.localizedDescription)
@@ -338,13 +337,9 @@ extension TrackersViewController: ICardTrackCellDelegate {
 
 extension TrackersViewController: UISearchResultsUpdating {
 	func updateSearchResults(for searchController: UISearchController) {
-//		let searchBarText = searchController.searchBar.text ?? ""
-//		let searchingString = searchBarText.lowercased()
 		loadTrackers(searchString: searchText,
 					 currentDay: currentDate,
 					 filtersForTrackerList: selectedFilter)
-		collectionView.reloadData()
-		checkEmptyTrackers()
 	}
 }
 
@@ -398,7 +393,6 @@ extension TrackersViewController: IChooseTrackerViewControllerDelegate {
 			loadTrackers(searchString: self.searchText,
 						 currentDay: self.currentDate,
 						 filtersForTrackerList: self.selectedFilter)
-			self.checkEmptyTrackers()
 		}
 	}
 }
@@ -448,7 +442,6 @@ extension TrackersViewController: IEditTrackerViewControllerDelegate {
 			loadTrackers(searchString: self.searchText,
 						 currentDay: self.currentDate,
 						 filtersForTrackerList: self.selectedFilter)
-			self.checkEmptyTrackers()
 		}
 	}
 }
@@ -462,6 +455,11 @@ extension TrackersViewController: IDataProviderDelegate {
 
 extension TrackersViewController: FilterCollectionViewProviderDelegate {
 	func getTrackerWithFilter(_ newFilter: FilterType) {
+		if newFilter == .trackersForToday {
+			datePicker.setDate(Date(), animated: true)
+			currentDate = Date()
+		}
+		
 		selectedFilter = newFilter
 		loadTrackers(searchString: searchText,
 					 currentDay: currentDate,
@@ -497,6 +495,7 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
 				},
 				UIAction(title:  NSLocalizedString("editActionTitle", comment: "Edit title for UIContext menu")) { [weak self] _ in
 					guard let self else { return }
+					self.analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "edit"])
 					self.editTracker(tracker: tracker)
 				},
 				UIAction(
@@ -504,6 +503,7 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
 					attributes: .destructive,
 					handler: { [weak self] _ in
 						guard let self else { return }
+						self.analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "delete"])
 						self.showActionSheetForDeleteTracker(indexPath: indexPath)
 					} )
 			])
