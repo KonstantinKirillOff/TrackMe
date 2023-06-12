@@ -4,7 +4,6 @@
 //
 //  Created by Konstantin Kirillov on 13.04.2023.
 //
-
 import UIKit
 
 final class StatisticsViewController: UIViewController {
@@ -43,6 +42,8 @@ final class StatisticsViewController: UIViewController {
 		super.viewWillAppear(animated)
 		plugView.isHidden = statisticProvider.isTrackersInCoreData
 		statisticLabelsArray.forEach { $0.isHidden = !statisticProvider.isTrackersInCoreData }
+		
+		statisticLabelsArray[2].config(type: StatisticType.completedTrackers, countForStatistic: statisticProvider.completedTrackers)
 	}
 	
 	private func setupView() {

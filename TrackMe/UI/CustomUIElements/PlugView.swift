@@ -29,7 +29,7 @@ final class PlugView: UIStackView {
 		super.init(frame: frame)
 		setupView()
 		addSubview()
-		plugLabel.text = NSLocalizedString("Statistic plug", comment: "Text for statistic plugView")
+		plugLabel.text = NSLocalizedString("statisticPlug", comment: "Text for statistic plugView")
 		plugImageView.image = UIImage(named: "noAnalyze") ?? UIImage()
 	}
 	
