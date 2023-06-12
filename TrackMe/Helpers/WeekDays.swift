@@ -20,6 +20,24 @@ enum WeekDay: String, CaseIterable {
 		String(Calendar.current.component(.weekday, from: date))
 	}
 	
+	static func getDayFromNumber(dayNumber: String) -> WeekDay {
+		if dayNumber == "2" {
+			return WeekDay.monday
+		} else if dayNumber == "3" {
+			return WeekDay.tuesday
+		} else if dayNumber == "4" {
+			return WeekDay.wednesday
+		} else if dayNumber == "5" {
+			return WeekDay.thursday
+		} else if dayNumber == "6" {
+			return WeekDay.friday
+		} else if dayNumber == "7" {
+			return WeekDay.saturday
+		} else {
+			return WeekDay.sunday
+		}
+	}
+	
 	func getNumberDay() -> String {
 		switch self {
 		case .monday:

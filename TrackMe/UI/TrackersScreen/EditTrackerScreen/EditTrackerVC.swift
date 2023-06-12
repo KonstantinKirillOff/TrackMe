@@ -157,6 +157,10 @@ final class EditTrackerViewController: UIViewController{
 		setupColorCollectionView()
 	}
 	
+	override func viewWillAppear(_ animated: Bool) {
+		setFirstSelection()
+	}
+	
 	func configViewController(header: String,
 							  trackerTypes: [String],
 							  delegate: IEditTrackerViewControllerDelegate,
@@ -170,6 +174,7 @@ final class EditTrackerViewController: UIViewController{
 		self.currentColor = trackerForEdit.color
 		self.currentEmoji = trackerForEdit.emoji
 		self.nameTrackerTextField.text = trackerForEdit.name
+		getScheduleFromTracker()
 	}
 	
 	private func setupUIElements() {
@@ -304,6 +309,20 @@ final class EditTrackerViewController: UIViewController{
 		return weekSchedule.sorted(by: { $0.key < $1.key }).map({ $0.value.rawValue }).joined(separator: ", ")
 	}
 	
+	private func getScheduleFromTracker() {
+		trackerForEdit.schedule.forEach { weekSchedule[$0] = WeekDay.getDayFromNumber(dayNumber: $0) }
+	}
+	
+	private func setFirstSelection() {
+		guard let indexColor = colors.firstIndex(where: { $0.toHexString == currentColor.toHexString }) else { return }
+		let colorIndexPath = IndexPath(row: indexColor, section: 0)
+		colorCollectionView.selectItem(at: colorIndexPath, animated: false, scrollPosition: .centeredHorizontally)
+		
+		guard let indexEmoji = emojies.firstIndex(where: { $0 == currentEmoji }) else { return }
+		let emojiIndexPath = IndexPath(row: indexEmoji, section: 0)
+		emojiCollectionView.selectItem(at: emojiIndexPath, animated: false, scrollPosition: .centeredHorizontally)
+	}
+	
 	@objc private func cancelButtonTapped() {
 		dismiss(animated: true)
 	}
@@ -322,14 +341,14 @@ final class EditTrackerViewController: UIViewController{
 		
 		let currentDayWeek = String(Calendar.current.component(.weekday, from: Date()))
 		let setWithWeekDays = weekSchedule.isEmpty ? Set([currentDayWeek]) : Set(weekSchedule.map({$0.key}))
-		let newTrackerData = Tracker(id: UUID(),
-								 name: trackName,
-								 color: currentColor,
-								 emoji: currentEmoji,
-								 schedule: setWithWeekDays,
-								 isHabit: trackerTypes.count > 1 ? true : false,
-								 idCategoryBeforePin: category.id,
-								 isPinned: trackerForEdit.isPinned)
+		let newTrackerData = Tracker(id: trackerForEdit.id,
+									 name: trackName,
+									 color: currentColor,
+									 emoji: currentEmoji,
+									 schedule: setWithWeekDays,
+									 isHabit: trackerTypes.count > 1 ? true : false,
+									 idCategoryBeforePin: category.id,
+									 isPinned: trackerForEdit.isPinned)
 	
 		delegate?.trackerDidEdit(tracker: newTrackerData, selectedCategory: category, vc: self)
 		dismiss(animated: true)
@@ -369,6 +388,7 @@ extension EditTrackerViewController: UITableViewDelegate {
 		if indexPath.row == 1 {
 			let scheduleVC = ScheduleViewController()
 			scheduleVC.delegate = self
+			scheduleVC.configForTracker(trackerSchedule: weekSchedule)
 			present(scheduleVC, animated: true)
 		} else {
 			let categoryListVM = CategoryListViewModel(categoryStore: TrackerCategoryStore())
@@ -419,14 +439,16 @@ extension EditTrackerViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		if collectionView == emojiCollectionView {
 			let emoji = emojies[indexPath.row]
+			currentEmoji = emoji
+			
 			let cell = collectionView.cellForItem(at: indexPath) as? EmojiCell
 			cell?.configCell(for: emoji, isSelected: true)
-			currentEmoji = emoji
 		} else {
 			let color = colors[indexPath.row]
+			currentColor = color
+			
 			let cell = collectionView.cellForItem(at: indexPath) as? ColorCell
 			cell?.configCell(for: color, isSelected: true)
-			currentColor = color
 		}
 	}
 	

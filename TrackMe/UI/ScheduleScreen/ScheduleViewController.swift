@@ -94,6 +94,10 @@ final class ScheduleViewController: UIViewController, UITableViewDelegate {
 		delegate?.getScheduleForTracker(weekDays: daysForSchedule)
 		dismiss(animated: true)
 	}
+	
+	func configForTracker(trackerSchedule: [String : WeekDay]) {
+		daysForSchedule = Set(trackerSchedule.map { WeekDay.getDayFromNumber(dayNumber: $0.key) })
+	}
 }
 
 extension ScheduleViewController: UITableViewDataSource {

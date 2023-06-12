@@ -18,12 +18,6 @@ struct Tracker {
 	let isPinned: Bool
 }
 
-extension Tracker: Equatable {
-	static func == (lrh: Tracker, rhs: Tracker) -> Bool {
-		lrh.id == rhs.id ? true : false
-	}
-}
-
 enum PinStatus {
 	case pinned
 	case unpinned
