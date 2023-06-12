@@ -35,6 +35,7 @@ protocol IDataProviderProtocol {
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws
 	func changeTracker(tracker: Tracker, category: TrackerCategoryCoreData) throws
 	func getTrackerCoreData(at indexPath: IndexPath) -> TrackerCoreData
+	func fetchTracker(by id: String) -> TrackerCoreData?
 	func getTrackerObject(at: IndexPath) -> Tracker?
 	
 	func countRecordForTracker(trackerID: String) -> Int
@@ -110,6 +111,10 @@ extension DataProvider: IDataProviderProtocol {
 	
 	func getTrackerCoreData(at indexPath: IndexPath) -> TrackerCoreData {
 		fetchedResultsController.object(at: indexPath)
+	}
+	
+	func fetchTracker(by id: String) -> TrackerCoreData? {
+		trackerStore.fetchTracker(by: id)
 	}
 
 	func addTracker(_ record: Tracker, category: TrackerCategoryCoreData) throws {

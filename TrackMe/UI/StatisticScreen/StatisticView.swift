@@ -16,13 +16,13 @@ enum StatisticType: CaseIterable {
 	var titleStatistic: String {
 		switch self {
 		case .bestPeriod:
-			return NSLocalizedString("Best period", comment: "title for Best period statistic label")
+			return NSLocalizedString("bestPeriod", comment: "title for Best period statistic label")
 		case .perfectDays:
-			return NSLocalizedString("Perfect period", comment: "title for Perfect period statistic label")
+			return NSLocalizedString("perfectPeriod", comment: "title for Perfect period statistic label")
 		case .completedTrackers:
-			return NSLocalizedString("Completed trackers", comment: "title for completed trackers statistic label")
+			return NSLocalizedString("completedTrackers", comment: "title for completed trackers statistic label")
 		case .averageValue:
-			return NSLocalizedString("Average Value", comment: "title for average value statistic label")
+			return NSLocalizedString("averageValue", comment: "title for average value statistic label")
 		}
 	}
 }

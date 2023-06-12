@@ -211,10 +211,16 @@ final class TrackersViewController: UIViewController {
 		
 		let editTrackerVC = EditTrackerViewController(tracker: tracker, selectedDay: currentDate)
 		let trackerTypes = tracker.isHabit ? ["Категория", "Расписание"] : ["Категория"]
+		let uuidString = tracker.id.uuidString
+		let recordCountForTracker = dataProvider.countRecordForTracker(trackerID: uuidString)
+		let trackerTrackedToday = dataProvider.trackerTrackedToday(date: currentDate.getDayWithoutTime(), trackerID: uuidString)
+		
 		editTrackerVC.configViewController(header: trackerTypes.count > 1 ? "Редактирование привычки" : "Редактирование не регулярного события",
 										   trackerTypes: trackerTypes,
 										   delegate: self,
-										   selectedCategory: categoryVM)
+										   selectedCategory: categoryVM,
+										   isAlreadyTracked: trackerTrackedToday,
+										   recordsCount: recordCountForTracker)
 		present(editTrackerVC, animated: true)
 	}
 	
@@ -398,7 +404,7 @@ extension TrackersViewController: IChooseTrackerViewControllerDelegate {
 }
 
 extension TrackersViewController: IEditTrackerViewControllerDelegate {
-	func trackerDidEdit(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: EditTrackerViewController) {
+	func trackerDidEdit(tracker: Tracker, selectedCategory: CategoryElementViewModel, newRecordsCount: Int, vc: EditTrackerViewController) {
 		vc.dismiss(animated: true) { [weak self] in
 			guard let self = self else { return }
 			
@@ -411,12 +417,31 @@ extension TrackersViewController: IEditTrackerViewControllerDelegate {
 			}
 			guard let category = category else { return }
 
-			//add tracker
+			//change tracker
 			do {
 				try self.dataProvider.changeTracker(tracker: tracker, category: category)
 			} catch {
 				//TODO: show alert
 				print(error.localizedDescription)
+			}
+			
+			//change recordsCount
+			let uuidString = tracker.id.uuidString
+			let dateWithoutTime = currentDate.getDayWithoutTime()
+			let recordCountForTracker = dataProvider.countRecordForTracker(trackerID: uuidString)
+			guard let trackerCoreData = dataProvider.fetchTracker(by: uuidString) else { return }
+			
+			if newRecordsCount > recordCountForTracker {
+				do {
+					try dataProvider.addTrackerRecord(TrackerRecord(id: tracker.id, date: dateWithoutTime), for: trackerCoreData)
+				} catch {
+					//TODO: show alert
+					print(error.localizedDescription)
+				}
+			}
+			
+			if newRecordsCount < recordCountForTracker  {
+				dataProvider.deleteRecord(date: dateWithoutTime, trackerID: uuidString)
 			}
 
 			//make filters

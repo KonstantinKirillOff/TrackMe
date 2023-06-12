@@ -8,13 +8,15 @@
 import UIKit
 
 protocol IEditTrackerViewControllerDelegate: AnyObject {
-	func trackerDidEdit(tracker: Tracker, selectedCategory: CategoryElementViewModel, vc: EditTrackerViewController)
+	func trackerDidEdit(tracker: Tracker, selectedCategory: CategoryElementViewModel, newRecordsCount: Int, vc: EditTrackerViewController)
 }
 
 final class EditTrackerViewController: UIViewController{
 	private let trackerForEdit: Tracker!
 	private var selectedCategory: CategoryElementViewModel?
 	private var selectedDay: Date
+	private var isAlreadyTracked: Bool = false
+	private var recordsCount: Int = 0
 	
 	private let colors = (1...18).map { UIColor(named: "Color\($0)") ?? .darkGray }
 	private let emojies = ["🙂", "😻", "🌺", "🐶", "❤️", "😱",
@@ -27,7 +29,6 @@ final class EditTrackerViewController: UIViewController{
 	private var trackerTypes = [String]()
 	private var headerForView = ""
 	private var weekSchedule: [String : WeekDay] = [:]
-	
 	
 	weak var delegate: IEditTrackerViewControllerDelegate?
 	
@@ -164,13 +165,17 @@ final class EditTrackerViewController: UIViewController{
 	func configViewController(header: String,
 							  trackerTypes: [String],
 							  delegate: IEditTrackerViewControllerDelegate,
-							  selectedCategory: CategoryElementViewModel) {
-		
+							  selectedCategory: CategoryElementViewModel,
+							  isAlreadyTracked: Bool,
+							  recordsCount: Int) {
 		self.trackerTypes = trackerTypes
 		self.headerForView = header
 		self.delegate = delegate
 		
 		self.selectedCategory = selectedCategory
+		self.isAlreadyTracked = isAlreadyTracked
+		self.recordsCount = recordsCount
+		
 		self.currentColor = trackerForEdit.color
 		self.currentEmoji = trackerForEdit.emoji
 		self.nameTrackerTextField.text = trackerForEdit.name
@@ -220,9 +225,9 @@ final class EditTrackerViewController: UIViewController{
 	}
 	
 	private func setupTextField() {
-		editCountDaysView.config(countDay: 2,
-								 isChecked: true,
-								 canCheck: true)
+		editCountDaysView.config(countDay: recordsCount,
+								 isChecked: isAlreadyTracked,
+								 canCheck: Date() < selectedDay)
 		contentView.addSubview(editCountDaysView)
 		editCountDaysView.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
@@ -350,7 +355,7 @@ final class EditTrackerViewController: UIViewController{
 									 idCategoryBeforePin: category.id,
 									 isPinned: trackerForEdit.isPinned)
 	
-		delegate?.trackerDidEdit(tracker: newTrackerData, selectedCategory: category, vc: self)
+		delegate?.trackerDidEdit(tracker: newTrackerData, selectedCategory: category, newRecordsCount: recordsCount, vc: self)
 		dismiss(animated: true)
 	}
 }
@@ -482,12 +487,12 @@ extension EditTrackerViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension EditTrackerViewController: EditCountDaysViewDelegate {
-	func checkDay() {
-		//TODO: changeRecord
+	func trackDay() {
+		recordsCount += 1
 	}
 	
-	func uncheckDay() {
-		//TODO: changeRecord
+	func untrackDay() {
+		recordsCount -= 1
 	}
 }
 

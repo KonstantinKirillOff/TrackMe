@@ -8,8 +8,8 @@
 import UIKit
 
 protocol EditCountDaysViewDelegate: AnyObject {
-	func checkDay()
-	func uncheckDay()
+	func trackDay()
+	func untrackDay()
 }
 
 final class EditCountDaysView: UIStackView {
@@ -106,7 +106,7 @@ final class EditCountDaysView: UIStackView {
 			self.setCountLabelText(with: self.countDay)
 			self.minusButton.isEnabled = false
 			self.plusButton.isEnabled = true
-			self.delegate?.uncheckDay()
+			self.delegate?.untrackDay()
 		}
 	}
 	
@@ -118,7 +118,7 @@ final class EditCountDaysView: UIStackView {
 			self.setCountLabelText(with: self.countDay)
 			self.minusButton.isEnabled = true
 			self.plusButton.isEnabled = false
-			self.delegate?.checkDay()
+			self.delegate?.trackDay()
 		}
 	}
 }
