@@ -68,13 +68,8 @@ final class EditCountDaysView: UIStackView {
 			return
 		}
 		
-		if isChecked {
-			minusButton.isEnabled = true
-			plusButton.isEnabled = false
-		} else {
-			minusButton.isEnabled = false
-			plusButton.isEnabled = true
-		}
+		minusButton.isEnabled = isChecked
+		plusButton.isEnabled = !isChecked
 	}
 	
 	private func setupView() {

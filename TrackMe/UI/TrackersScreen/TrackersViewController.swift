@@ -99,15 +99,18 @@ final class TrackersViewController: UIViewController {
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
-		analyticService.sendEvent(event: "open", parameters: ["screen" : "main"])
+		analyticService.sendEvent(event: AnalyticServiceManager.Events.open,
+								  parameters: [AnalyticServiceManager.EventParameters.screen.rawValue : AnalyticServiceManager.Screens.main.rawValue])
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
-		analyticService.sendEvent(event: "close", parameters: ["screen" : "main"])
+		analyticService.sendEvent(event: AnalyticServiceManager.Events.close,
+								  parameters: [AnalyticServiceManager.EventParameters.screen.rawValue : AnalyticServiceManager.Screens.main.rawValue])
 	}
 	
-	func initialize(dataProvider: IDataProviderProtocol) {
+	func initialize(dataProvider: IDataProviderProtocol, date: Date = Date()) {
 		self.dataProvider = dataProvider
+		self.datePicker.date = date
 	}
 	
 	private func setupView() {
@@ -168,7 +171,10 @@ final class TrackersViewController: UIViewController {
 	}
 	
 	@objc private func openAddNewTrackerVC() {
-		analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "add_tracker"])
+		analyticService.sendEvent(event: AnalyticServiceManager.Events.click,
+								  parameters: [AnalyticServiceManager.EventParameters.screen.rawValue : AnalyticServiceManager.Screens.main.rawValue,
+											   AnalyticServiceManager.EventParameters.item.rawValue : AnalyticServiceManager.Items.add_track.rawValue]
+		)
 		
 		let chooseVC = ChooseTrackerViewController()
 		chooseVC.delegate = self
@@ -184,7 +190,11 @@ final class TrackersViewController: UIViewController {
 	
 	@objc
 	private func filterButtonTapped() {
-		analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "filter"])
+		analyticService.sendEvent(event: AnalyticServiceManager.Events.click,
+								  parameters: [AnalyticServiceManager.EventParameters.screen.rawValue : AnalyticServiceManager.Screens.main.rawValue,
+											   AnalyticServiceManager.EventParameters.item.rawValue : AnalyticServiceManager.Items.filter.rawValue]
+		)
+		
 		filterButton.showAnimation { [weak self] in
 			guard let self else { return }
 			self.showFilterViewController()
@@ -312,16 +322,19 @@ extension TrackersViewController: UICollectionViewDataSource {
 
 extension TrackersViewController: ICardTrackCellDelegate {
 	func quantityButtonPressed(_ cell: CardTrackerCell) {
-		analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "track"])
+		analyticService.sendEvent(event: AnalyticServiceManager.Events.click,
+								  parameters: [AnalyticServiceManager.EventParameters.screen.rawValue : AnalyticServiceManager.Screens.main.rawValue,
+											   AnalyticServiceManager.EventParameters.item.rawValue : AnalyticServiceManager.Items.track.rawValue]
+		)
 		
 		guard let indexPath = collectionView.indexPath(for: cell) else { return }
 		guard currentDate <= Date() else { return }
 		guard let tracker = dataProvider.getTrackerObject(at: indexPath) else { return }
 		
 		let dateWithoutTime = currentDate.getDayWithoutTime()
-		let trackerCoreData = dataProvider.getTrackerCoreData(at: indexPath)
 		let uuidString = tracker.id.uuidString
 		let trackerTrackedToday = dataProvider.trackerTrackedToday(date: dateWithoutTime, trackerID: uuidString)
+		guard let trackerCoreData = dataProvider.getTrackerCoreData(at: indexPath) else { return }
 		
 		if !trackerTrackedToday {
 			do {
@@ -498,7 +511,11 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
 				},
 				UIAction(title:  NSLocalizedString("editActionTitle", comment: "Edit title for UIContext menu")) { [weak self] _ in
 					guard let self else { return }
-					self.analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "edit"])
+					self.analyticService.sendEvent(event: AnalyticServiceManager.Events.click,
+												   parameters: [AnalyticServiceManager.EventParameters.screen.rawValue : AnalyticServiceManager.Screens.main.rawValue,
+																AnalyticServiceManager.EventParameters.item.rawValue : AnalyticServiceManager.Items.edit.rawValue]
+					)
+					
 					self.editTracker(tracker: tracker)
 				},
 				UIAction(
@@ -506,7 +523,11 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
 					attributes: .destructive,
 					handler: { [weak self] _ in
 						guard let self else { return }
-						self.analyticService.sendEvent(event: "click", parameters: ["screen" : "main", "item" : "delete"])
+						self.analyticService.sendEvent(event: AnalyticServiceManager.Events.click,
+													   parameters: [AnalyticServiceManager.EventParameters.screen.rawValue : 			AnalyticServiceManager.Screens.main.rawValue,
+																	AnalyticServiceManager.EventParameters.item.rawValue : AnalyticServiceManager.Items.delete.rawValue]
+						)
+						
 						self.showActionSheetForDeleteTracker(indexPath: indexPath)
 					} )
 			])

@@ -57,15 +57,15 @@ final class FiltersCollectionViewCell: UICollectionViewCell {
 		checkmarkImageView.isHidden = !checkmarkIsHidden
 	}
 	
+	func hideLineView() {
+		lineView.isHidden = true
+	}
+	
 	private func setupView() {
 		backgroundColor = .clear
 		contentView.backgroundColor = Colors.ypBackground
 	}
 	
-	func hideLineView() {
-		lineView.isHidden = true
-	}
-		
 	private func addSubview() {
 		contentView.addSubViews(
 			filterLabel,

@@ -91,7 +91,7 @@ extension FilterCollectionViewProvider: UICollectionViewDelegateFlowLayout {
 	}
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-		0
+		.zero
 	}
 }
 

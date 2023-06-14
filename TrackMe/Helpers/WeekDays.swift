@@ -21,19 +21,20 @@ enum WeekDay: String, CaseIterable {
 	}
 	
 	static func getDayFromNumber(dayNumber: String) -> WeekDay {
-		if dayNumber == "2" {
+		switch dayNumber {
+		case "2":
 			return WeekDay.monday
-		} else if dayNumber == "3" {
+		case "3":
 			return WeekDay.tuesday
-		} else if dayNumber == "4" {
+		case "4":
 			return WeekDay.wednesday
-		} else if dayNumber == "5" {
+		case "5":
 			return WeekDay.thursday
-		} else if dayNumber == "6" {
+		case "6":
 			return WeekDay.friday
-		} else if dayNumber == "7" {
+		case "7":
 			return WeekDay.saturday
-		} else {
+		default:
 			return WeekDay.sunday
 		}
 	}

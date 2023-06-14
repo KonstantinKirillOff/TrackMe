@@ -162,6 +162,11 @@ final class EditTrackerViewController: UIViewController{
 		setFirstSelection()
 	}
 	
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		super.touchesBegan(touches, with: event)
+		view.endEditing(true)
+	}
+	
 	func configViewController(header: String,
 							  trackerTypes: [String],
 							  delegate: IEditTrackerViewControllerDelegate,
