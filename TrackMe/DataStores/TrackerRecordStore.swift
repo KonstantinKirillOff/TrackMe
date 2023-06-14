@@ -46,6 +46,15 @@ final class TrackerRecordStore: NSObject, ITrackerRecordStoreProtocol {
 		return !recordsForTacker.isEmpty
    }
 	
+	func finishedTrackersForDate(date: Date) -> [TrackerCoreData] {
+		let request = TrackerRecordCoreData.fetchRequest()
+		request.returnsObjectsAsFaults = false
+		request.predicate = NSPredicate(format: "%K == %@",
+										#keyPath(TrackerRecordCoreData.date), date as NSDate)
+		guard let trackersWithRecords = try? context.fetch(request) else { return [] }
+		return trackersWithRecords.compactMap { $0.tracker }
+	}
+	
 	func countRecordForTracker(trackerID: String) -> Int {
 		let request = TrackerRecordCoreData.fetchRequest()
 		request.returnsObjectsAsFaults = true

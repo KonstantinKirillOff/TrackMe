@@ -1,0 +1,38 @@
+/* 
+  Localizable.strings
+  TrackMe
+
+  Created by Konstantin Kirillov on 05.06.2023.
+  
+*/
+
+//TrackersScreen
+"trackersVC_header" = "Трэкеры";
+"trackersVC_filterButtonName" = "Фильтры";
+"tabBarItemTracker" = "Трекеры";
+"tabBarItemStatistics" = "Статистика";
+"trackersVC_stub" = "Что будем отслеживать?";
+
+//Filters
+"filterTitle" = "Фильтры";
+"allTrackers" = "Все трэкеры";
+"trackersForToday" = "Трэкеры на сегодня";
+"completed" = "Завершенные";
+"notCompleted" = "Не завершенные";
+
+//editMenu
+"searchBarPlaceholderText" = "Поиск";
+"searchBarCancelButtonText" = "Отмена";
+"deleteActionSheetMessage" = "Уверены что хотите удалить трекер?";
+"deleteActionTitle" = "Удалить";
+"cancelActionSheetButtonTitle" = "Отменить";
+"editActionTitle" = "Редактировать";
+"toPinTracker" = "Закрепить";
+"toUnpinTracker" = "Открепить";
+
+//statistic
+"bestPeriod" = "Лучший период";
+"perfectPeriod" = "Идеальный период";
+"completedTrackers" = "Трекеров завершено";
+"averageValue" = "Среднее значение";
+"statisticPlug" = "Анализировать пока нечего";

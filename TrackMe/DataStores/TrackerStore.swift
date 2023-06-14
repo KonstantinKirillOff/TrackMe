@@ -29,9 +29,63 @@ final class TrackerStore: NSObject, ITrackerStoreProtocol {
 		trackerCoreData.name = tracker.name
 		trackerCoreData.emoji = tracker.emoji
 		trackerCoreData.hexColor = tracker.color.toHexString
+		trackerCoreData.isHabit = tracker.isHabit
+		trackerCoreData.idCategoryBeforePin = tracker.idCategoryBeforePin
 		trackerCoreData.schedule = Array(tracker.schedule).joined(separator: ",")
 		trackerCoreData.category = category
 		try context.save()
+	}
+	
+	func deleteTracker(by id: String) throws {
+		let request = TrackerCoreData.fetchRequest()
+		request.returnsObjectsAsFaults = false
+		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), id)
+	
+		guard let trackersForDeleting = try? context.fetch(request) else { return }
+		trackersForDeleting.forEach { tracker in
+			context.delete(tracker)
+		}
+		try context.save()
+	}
+	
+	func deleteAllTrackers() throws {
+		let request = TrackerCoreData.fetchRequest()
+		request.returnsObjectsAsFaults = false
+	
+		guard let trackersForDeleting = try? context.fetch(request) else { return }
+		trackersForDeleting.forEach { tracker in
+			context.delete(tracker)
+		}
+		try context.save()
+	}
+	
+	func fetchTracker(by id: String) -> TrackerCoreData? {
+		let request = TrackerCoreData.fetchRequest()
+		request.fetchLimit = 1
+		request.returnsObjectsAsFaults = false
+		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), id)
+		
+		guard let trackers = try? context.fetch(request) else { return nil }
+		return trackers.first
+	}
+	
+	func changeTracker(tracker: Tracker, category: TrackerCategoryCoreData) throws {
+		let request = TrackerCoreData.fetchRequest()
+		request.returnsObjectsAsFaults = false
+		request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCoreData.trackerID), tracker.id.uuidString)
+		
+		guard let trackers = try? context.fetch(request) else { return }
+		if let trackerForChange = trackers.first {
+			trackerForChange.trackerID = tracker.id.uuidString
+			trackerForChange.name = tracker.name
+			trackerForChange.emoji = tracker.emoji
+			trackerForChange.hexColor = tracker.color.toHexString
+			trackerForChange.isHabit = tracker.isHabit
+			trackerForChange.idCategoryBeforePin = tracker.idCategoryBeforePin
+			trackerForChange.schedule = Array(tracker.schedule).joined(separator: ",")
+			trackerForChange.category = category
+			try context.save()
+		}
 	}
 	
 	func tracker(from trackerCoreData: TrackerCoreData) throws -> Tracker {
@@ -54,7 +108,9 @@ final class TrackerStore: NSObject, ITrackerStoreProtocol {
 					   name: name,
 					   color: UIColor.color(fromHex: colorHex),
 					   emoji: emojies,
-					   schedule: Set(schedule.components(separatedBy: ",")))
+					   schedule: Set(schedule.components(separatedBy: ",")),
+					   isHabit: trackerCoreData.isHabit,
+					   idCategoryBeforePin: trackerCoreData.idCategoryBeforePin,
+					   isPinned: trackerCoreData.isPinned)
 	}
-		
 }

@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  TrackMe
+
+  Created by Konstantin Kirillov on 05.06.2023.
+  
+*/
+
+"CFBundleDisplayName" = "Трэкеры";
